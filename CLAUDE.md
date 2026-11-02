@@ -14,7 +14,7 @@ Cesar's personal site and journal at `cjtech.dev`: projects, psychology, games, 
 - Posts: `src/content/journal/{es,en}/*.md`, schema in `src/content.config.ts`. `translationKey` links the es and en versions. `_templates/` holds Obsidian templates and is not published.
 - UI text: `src/lib/i18n.ts` (es and en). Post text never goes there.
 - Design tokens: `src/styles/tokens.css`. Use tokens, never literal colors. Every color needs a dark value.
-- Mind map topics and links: `src/lib/mindmap.ts`.
+- Mind map topics and links: `src/lib/mindmap.ts`. Profile links (GitHub, LinkedIn): `src/lib/site.ts`.
 
 ## Rules
 - Cost zero: static hosting on Cloudflare free tier. No paid services.
