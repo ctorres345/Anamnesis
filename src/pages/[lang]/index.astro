@@ -1,0 +1,120 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Inkblot from '../../islands/Inkblot';
+import MindMap from '../../islands/MindMap';
+import JournalList from '../../islands/JournalList';
+import GameShelf from '../../components/GameShelf.astro';
+import { LANGS, otherLang, useT, type Lang } from '../../lib/i18n';
+import { getEntries, toRows } from '../../lib/journal';
+import { SOCIAL } from '../../lib/site';
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+const t = useT(lang);
+const entries = await getEntries(lang);
+const latest = toRows(entries.slice(0, 5), lang);
+const games = entries.filter((e) => e.data.kind === 'game').slice(0, 3);
+const nowPlaying = games.find((g) => g.data.game?.status === 'playing');
+---
+
+<BaseLayout lang={lang} title="cjtech.dev" description={t('journal.intro')} altPath={`/${otherLang(lang)}/`}>
+  <section class="hero pad">
+    <div>
+      <span class="chip">
+        <i style="background:var(--sky)"></i>{t('hero.chip.engineer')}
+        <i style="background:var(--lavender)"></i>{t('hero.chip.psych')}
+      </span>
+      <h1>
+        {t('hero.l1')}{' '}
+        <span class="circled">
+          {t('hero.circled')}
+          <svg viewBox="0 0 200 60" aria-hidden="true" preserveAspectRatio="none">
+            <path d="M18 34 C 10 12, 70 4, 120 6 C 175 8, 198 22, 190 38 C 182 54, 110 58, 60 54 C 20 51, 4 40, 22 22"></path>
+          </svg>
+        </span>{' '}
+        <span class="soft">{t('hero.and')}</span> <span class="mark">{t('hero.write')}</span>{' '}
+        <span class="soft">{t('hero.rest')}</span>
+      </h1>
+      <div class="actions">
+        <a class="btn dark" href={`/${lang}/journal/`}>{t('hero.cta.journal')} ↗</a>
+        <a class="btn" href="#mind">{t('hero.cta.mind')}</a>
+      </div>
+      <div class="social">
+        {SOCIAL.map((s) => <a href={s.href} rel="me">{s.label} ↗</a>)}
+      </div>
+      <div class="now">
+        <span>{t('hero.now.building')} <b>Yuyay</b></span>
+        {nowPlaying && (
+          <span>{t('status.playing')} <b>{nowPlaying.data.title.split(',')[0]}</b>{nowPlaying.data.sample && ` (${t('sample')})`}</span>
+        )}
+      </div>
+    </div>
+    <Inkblot
+      client:visible
+      labels={{
+        card: t('inkblot.card'),
+        label: t('inkblot.label'),
+        question: t('inkblot.question'),
+        next: t('inkblot.new'),
+        fine: t('inkblot.fine'),
+        aria: t('inkblot.aria'),
+      }}
+    />
+  </section>
+
+  <section class="mind" id="mind">
+    <div class="pad">
+      <h2>{t('mind.title')} <span class="soft">{t('mind.titleSoft')}</span></h2>
+      <MindMap client:visible lang={lang} hint={t('mind.hint')} />
+    </div>
+  </section>
+
+  <section class="block pad">
+    <div class="sec-head">
+      <h2>{t('notes.title')} <span class="soft">{t('notes.titleSoft')}</span></h2>
+      <p>{t('notes.intro')}</p>
+    </div>
+    <JournalList rows={latest} sampleLabel={t('sample')} />
+    <p class="more"><a class="btn" href={`/${lang}/journal/`}>{t('notes.all')} →</a></p>
+  </section>
+
+  {games.length > 0 && (
+    <section class="block pad" style="padding-top:0">
+      <div class="sec-head">
+        <h2>{t('games.title')} <span class="soft">{t('games.titleSoft')}</span></h2>
+        <p>{t('games.intro')}</p>
+      </div>
+      <GameShelf games={games} lang={lang} />
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .hero {
+    display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 56px);
+    padding-block: clamp(20px, 4vw, 44px) clamp(36px, 5vw, 60px); align-items: center;
+  }
+  .chip { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; font: 500 13px var(--font-mono); border: 1px solid var(--line); border-radius: 99px; padding: 6px 12px; }
+  .chip i { width: 8px; height: 8px; border-radius: 2px; display: block; }
+  h1 { font-weight: 600; font-size: var(--step-4); line-height: 1.04; letter-spacing: -0.035em; margin: 18px 0 26px; }
+  .circled { position: relative; white-space: nowrap; }
+  .circled svg { position: absolute; left: -8%; top: -14%; width: 116%; height: 132%; overflow: visible; pointer-events: none; }
+  .circled path { fill: none; stroke: var(--lavender); stroke-width: 4; stroke-linecap: round; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  .social { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 16px; font: 500 13px var(--font-mono); }
+  .social a { color: var(--lavender-deep); text-decoration: none; }
+  .social a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .now { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+  .now span { font: 400 12px var(--font-mono); color: var(--muted); border: 1px dashed var(--line); border-radius: 8px; padding: 5px 9px; }
+  .now b { color: var(--ink); font-weight: 500; }
+  .mind { background: var(--lavender-soft); padding-block: clamp(30px, 4vw, 44px); }
+  .mind h2 { margin: 0 0 6px; font-weight: 600; font-size: var(--step-2); letter-spacing: -0.03em; }
+  .more { margin: 22px 0 0; }
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: minmax(0, 1fr); }
+    .hero :global(.ink-card) { max-width: 460px; }
+  }
+</style>

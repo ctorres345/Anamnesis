@@ -1,0 +1,48 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import type { Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description?: string;
+  /** Path of this page in the other language, for the language switch. */
+  altPath?: string;
+}
+
+const { lang, title, description = '', altPath } = Astro.props;
+const fullTitle = title === 'cjtech.dev' ? title : `${title} · cjtech.dev`;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{fullTitle}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title="cjtech.dev" href={`/${lang}/rss.xml`} />
+    <meta name="generator" content={Astro.generator} />
+    <script is:inline>
+      // Apply the saved theme before the first paint (no flash). Auto = follow the system.
+      try {
+        const t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch {}
+    </script>
+    <ClientRouter />
+  </head>
+  <body>
+    <div class="sheet">
+      <Header lang={lang} altPath={altPath} />
+      <main>
+        <slot />
+      </main>
+      <Footer lang={lang} />
+    </div>
+  </body>
+</html>

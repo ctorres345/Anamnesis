@@ -1,0 +1,79 @@
+/* Styles for the React islands (src/islands). Global, so they also apply to plain-HTML renders. */
+
+/* ---------- Inkblot ---------- */
+.ink-card {
+  margin: 0; border: 1px solid var(--line); border-radius: var(--radius-l); background: var(--sheet);
+  padding: 16px 18px 18px; display: grid; gap: 10px; box-shadow: 0 18px 40px -30px rgba(60, 40, 120, 0.35);
+}
+.ink-top { display: flex; justify-content: space-between; font: 500 11px var(--font-mono); text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+.ink-wrap { background: var(--lavender-soft); border-radius: var(--radius-m); padding: 7%; display: grid; place-items: center; }
+.ink-blot { display: grid; grid-template-columns: repeat(18, 1fr); width: 100%; max-width: 380px; aspect-ratio: 18 / 14; gap: 2px; }
+.ink-blot i { display: block; border-radius: 2px; transition: transform 0.35s var(--ease-pop), background 0.35s; }
+.ink-blot i.m { background: var(--matcha); }
+.ink-blot i.d { background: var(--matcha-deep); }
+.ink-blot i.l { background: var(--lavender-deep); opacity: 0.55; }
+.ink-blot i.p { background: var(--peach); }
+.ink-blot i.e { transform: scale(0); }
+.ink-bottom { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ink-btn { border: 1px solid var(--line); background: var(--sheet); border-radius: 99px; padding: 6px 13px; font-size: 14px; cursor: pointer; }
+.ink-btn:hover { background: var(--lavender-soft); }
+.ink-fine { font: 400 11px var(--font-mono); color: var(--muted); }
+
+/* ---------- Mind map ---------- */
+.mind-cap { font: 400 13px var(--font-mono); color: var(--muted); min-height: 1.5em; margin: 0 0 8px; }
+.mind-cap b { color: var(--lavender-deep); font-weight: 500; }
+.mind-map { position: relative; height: 260px; }
+.mind-map.phone { height: 340px; }
+.mind-map svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.mind-map line { stroke: var(--lavender); stroke-width: 1.5; stroke-dasharray: 4 5; transition: opacity var(--dur); }
+.mind-map line.on { stroke: var(--lavender-deep); stroke-dasharray: none; stroke-width: 2; }
+.mind-map.focus line:not(.on) { opacity: 0.25; }
+.mind-node {
+  position: absolute; transform: translate(-50%, -50%); border: 0; border-radius: 99px; padding: 9px 16px;
+  font-weight: 600; font-size: 15px; color: var(--on-pastel); cursor: pointer; white-space: nowrap;
+  transition: transform var(--dur), opacity var(--dur), box-shadow var(--dur);
+}
+.mind-node:hover, .mind-node:focus-visible { transform: translate(-50%, -50%) scale(1.07); box-shadow: 0 8px 18px -10px rgba(60, 40, 120, 0.5); }
+.mind-map.focus .mind-node:not(.on) { opacity: 0.4; }
+.mind-map.phone .mind-node { font-size: 13px; padding: 7px 12px; }
+
+/* ---------- Journal list (field notes) ---------- */
+.jl-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.jl-filters button {
+  border: 1px solid var(--line); background: var(--sheet); border-radius: 99px; padding: 6px 13px;
+  cursor: pointer; font-size: 14px; display: inline-flex; align-items: center; gap: 7px;
+}
+.jl-filters button i { width: 9px; height: 9px; border-radius: 2px; display: block; background: var(--hl); }
+.jl-filters button[aria-pressed='true'] { background: var(--ink); color: var(--sheet); border-color: var(--ink); }
+.jl-rows { border-top: 1px solid var(--line); }
+.jl-row {
+  display: grid; grid-template-columns: 11ch minmax(0, 1fr) auto minmax(0, 15ch); gap: 18px; align-items: center;
+  padding: 18px 14px; margin-inline: -14px; border-bottom: 1px solid var(--line); text-decoration: none;
+  border-radius: 4px; transition: background var(--dur);
+}
+.jl-row:hover { background: var(--hl); color: var(--on-pastel); }
+.jl-date { font: 400 13px var(--font-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.jl-title { font-size: var(--step-1); font-weight: 500; letter-spacing: -0.01em; min-width: 0; }
+.jl-title small { display: block; font-size: 14px; color: var(--muted); font-weight: 400; letter-spacing: 0; }
+.jl-meta { display: flex; gap: 6px; align-items: center; }
+.jl-note { font: 600 19px/1.05 var(--font-hand); color: var(--lavender-deep); transform: rotate(-2deg); }
+.jl-row:hover .jl-date, .jl-row:hover .jl-title small, .jl-row:hover .jl-note, .jl-row:hover .badge-sample { color: var(--on-pastel); }
+.jl-empty { color: var(--muted); padding: 18px 0; margin: 0; }
+@media (max-width: 860px) {
+  .jl-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .jl-date { display: none; }
+  .jl-note { grid-column: 1 / -1; }
+}
+
+/* ---------- Likert ---------- */
+.likert { border: 1px solid var(--line); border-radius: 18px; padding: 16px; }
+.likert fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 10px; }
+.likert legend { font-weight: 600; font-size: 15px; padding: 0; margin-bottom: 10px; }
+.likert-scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.likert-scale label { display: grid; justify-items: center; gap: 6px; cursor: pointer; font: 400 10px/1.2 var(--font-mono); color: var(--muted); text-align: center; position: relative; }
+.likert-scale input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.likert-dot { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--lavender); display: block; transition: background 0.2s, transform 0.2s; }
+.likert-scale label:hover .likert-dot { transform: scale(1.1); }
+.likert-scale input:checked + .likert-dot { background: var(--lavender-deep); border-color: var(--lavender-deep); }
+.likert-scale input:focus-visible + .likert-dot { outline: 2px solid var(--lavender-deep); outline-offset: 3px; }
+.likert-out { font: 400 12px var(--font-mono); color: var(--muted); margin: 12px 0 0; min-height: 1.4em; }

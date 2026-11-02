@@ -1,0 +1,58 @@
+---
+import { useT, type Lang } from '../lib/i18n';
+import { entryUrl, type Entry } from '../lib/journal';
+
+interface Props {
+  games: Entry[];
+  lang: Lang;
+}
+const { games, lang } = Astro.props;
+const t = useT(lang);
+
+// Small pixel icon per status (7x6). "o" = filled.
+const ICONS = {
+  playing: ['.oo.oo.', 'ooooooo', 'ooooooo', '.ooooo.', '..ooo..', '...o...'],
+  finished: ['...o...', '..ooo..', 'ooooooo', '.ooooo.', '.oo.oo.', 'o.....o'],
+  dropped: ['..ooo..', '.ooooo.', 'oo.o.oo', 'ooooooo', 'ooooooo', 'o.o.o.o'],
+} as const;
+const stars = (n: number) => '★'.repeat(n) + '☆'.repeat(5 - n);
+---
+
+<div class="shelf">
+  {games.map((g) => {
+    const info = g.data.game!;
+    return (
+      <a class="game" href={entryUrl(g)} data-status={info.status}>
+        <div class="cover">
+          <span class="stat">{t(`status.${info.status}`)}</span>
+          {g.data.sample && <span class="stat sample">{t('sample')}</span>}
+          <div class="px" aria-hidden="true">
+            {ICONS[info.status].join('').split('').map((c) => <i class={c === 'o' ? 'on' : undefined} />)}
+          </div>
+        </div>
+        <h3>{g.data.title.split(',')[0]}</h3>
+        <div class="meta">
+          <span>{info.platform}</span>
+          {info.hours !== undefined && <span>{info.hours} h</span>}
+          {info.rating !== undefined && <span aria-label={`${info.rating}/5`}>{stars(info.rating)}</span>}
+        </div>
+      </a>
+    );
+  })}
+</div>
+
+<style>
+  .shelf { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .game { border: 1px solid var(--line); border-radius: 18px; padding: 16px; display: grid; gap: 10px; text-decoration: none; transition: transform var(--dur); }
+  .game:hover { transform: translateY(-4px); }
+  .cover { aspect-ratio: 4 / 3; border-radius: 12px; background: var(--hl); display: grid; place-items: center; position: relative; overflow: hidden; }
+  .px { display: grid; grid-template-columns: repeat(7, 12px); gap: 3px; }
+  .px i { width: 12px; height: 12px; display: block; }
+  .px i.on { background: var(--on-pastel); opacity: 0.85; }
+  .stat { position: absolute; top: 10px; left: 10px; font: 500 11px var(--font-mono); background: var(--sheet); color: var(--ink); padding: 3px 8px; border-radius: 6px; }
+  .stat.sample { left: auto; right: 10px; color: var(--muted); }
+  h3 { margin: 0; font-size: 19px; font-weight: 600; letter-spacing: -0.01em; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px 14px; font: 400 12px var(--font-mono); color: var(--muted); }
+  @media (max-width: 860px) { .shelf { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+  @media (max-width: 520px) { .shelf { grid-template-columns: minmax(0, 1fr); } }
+</style>

@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GameShelf from '../../components/GameShelf.astro';
+import { LANGS, otherLang, useT, type Lang } from '../../lib/i18n';
+import { getEntries } from '../../lib/journal';
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+const t = useT(lang);
+const games = (await getEntries(lang)).filter((e) => e.data.kind === 'game');
+---
+
+<BaseLayout lang={lang} title={`${t('games.title')} ${t('games.titleSoft')}`} altPath={`/${otherLang(lang)}/games/`}>
+  <section class="block pad">
+    <div class="sec-head">
+      <h1>{t('games.title')} <span class="soft">{t('games.titleSoft')}</span></h1>
+      <p>{t('games.intro')}</p>
+    </div>
+    {games.length > 0 ? <GameShelf games={games} lang={lang} /> : <p class="soft">{t('games.empty')}</p>}
+  </section>
+</BaseLayout>

@@ -1,0 +1,47 @@
+---
+import { otherLang, useT, type Lang } from '../lib/i18n';
+import ThemeToggle from './ThemeToggle.astro';
+
+interface Props {
+  lang: Lang;
+  altPath?: string;
+}
+const { lang, altPath } = Astro.props;
+const t = useT(lang);
+const alt = otherLang(lang);
+const path = Astro.url.pathname;
+const links = [
+  { href: `/${lang}/journal/`, label: t('nav.journal') },
+  { href: `/${lang}/games/`, label: t('nav.games') },
+];
+---
+
+<header class="site pad">
+  <a class="brand" href={`/${lang}/`}>Cesar <span>/ {lang === 'es' ? 'Diario' : 'Journal'}</span></a>
+  <nav aria-label="Main">
+    {links.map((l) => (
+      <a href={l.href} aria-current={path.startsWith(l.href) ? 'page' : undefined}>{l.label}</a>
+    ))}
+  </nav>
+  <a class="lang" href={altPath ?? `/${alt}/`} hreflang={alt} lang={alt}>
+    <b>{lang.toUpperCase()}</b> / {alt.toUpperCase()}
+  </a>
+  <ThemeToggle lang={lang} />
+</header>
+
+<style>
+  .site { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding-block: 26px; }
+  .brand { font-weight: 700; font-size: 19px; text-decoration: none; margin-right: auto; }
+  .brand span { color: var(--muted); font-weight: 500; }
+  nav { display: flex; flex-wrap: wrap; gap: 4px 22px; font-size: 15px; }
+  nav a { text-decoration: none; color: var(--muted); }
+  nav a:hover, nav a[aria-current='page'] { color: var(--ink); }
+  nav a[aria-current='page'] { text-decoration: underline wavy var(--lavender); text-underline-offset: 6px; }
+  .lang {
+    font: 500 12px var(--font-mono); border: 1px solid var(--line); border-radius: 99px;
+    padding: 4px 10px; color: var(--muted); text-decoration: none;
+  }
+  .lang b { color: var(--ink); }
+  .lang:hover { background: var(--lavender-soft); }
+  @media (max-width: 520px) { nav { order: 3; width: 100%; } }
+</style>

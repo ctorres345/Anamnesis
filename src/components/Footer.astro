@@ -1,0 +1,36 @@
+---
+import { useT, type Lang } from '../lib/i18n';
+import { SOCIAL } from '../lib/site';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useT(lang);
+const year = new Date().getFullYear();
+---
+
+<footer class="site pad">
+  <div class="top">
+    <p class="cta">{t('footer.subscribe')}</p>
+    <div class="links">
+      {SOCIAL.map((s) => <a href={s.href} rel="me">({s.label})</a>)}
+      <a href={`/${lang}/rss.xml`}>(RSS)</a>
+      <a href="https://yuyay.cjtech.dev">(Yuyay)</a>
+    </div>
+  </div>
+  <p class="giant" aria-hidden="true">cesar <span class="hl">torres</span></p>
+  <div class="fine"><span>cjtech.dev · {year}</span><span>{t('footer.made')}</span></div>
+</footer>
+
+<style>
+  .site { padding-block: 40px 22px; border-top: 1px solid var(--line); }
+  .top { display: flex; flex-wrap: wrap; gap: 16px 40px; justify-content: space-between; align-items: baseline; }
+  .cta { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
+  .links { display: flex; flex-wrap: wrap; gap: 6px 18px; font: 400 13px var(--font-mono); color: var(--muted); }
+  .links a { text-decoration: none; }
+  .links a:hover { color: var(--ink); }
+  .giant {
+    font-weight: 700; font-size: var(--step-giant); letter-spacing: -0.06em; line-height: 0.82;
+    margin: 40px 0 0; white-space: nowrap; overflow: hidden;
+  }
+  .hl { background: linear-gradient(transparent 62%, var(--lavender) 62%, var(--lavender) 88%, transparent 88%); }
+  .fine { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 18px; font: 400 12px var(--font-mono); color: var(--muted); }
+</style>

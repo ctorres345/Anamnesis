@@ -1,0 +1,163 @@
+export const LANGS = ['es', 'en'] as const;
+export type Lang = (typeof LANGS)[number];
+
+export function isLang(value: string | undefined): value is Lang {
+  return LANGS.includes(value as Lang);
+}
+
+const ui = {
+  es: {
+    'site.tagline': 'Diario de Cesar',
+    'nav.journal': 'Diario',
+    'nav.games': 'Juegos',
+    'nav.subscribe': 'Suscribirme',
+    'theme.label': 'Tema',
+    'theme.auto': 'Auto',
+    'theme.light': 'Claro',
+    'theme.dark': 'Oscuro',
+    'hero.chip.engineer': 'Ingeniero de software',
+    'hero.chip.psych': 'Estudiante de psicología',
+    'hero.l1': 'Construyo software,',
+    'hero.circled': 'estudio la mente',
+    'hero.and': 'y',
+    'hero.write': 'escribo',
+    'hero.rest': 'sobre juegos, arte y la forma en que pensamos.',
+    'hero.cta.journal': 'Leer el diario',
+    'hero.cta.mind': 'Cómo se conecta',
+    'hero.now.building': 'construyendo',
+    'inkblot.card': 'Lámina',
+    'inkblot.label': 'mancha de pixeles',
+    'inkblot.question': '¿qué ves?',
+    'inkblot.new': 'Otra lámina',
+    'inkblot.fine': 'Solo por diversión, no es una prueba.',
+    'inkblot.aria': 'Mancha de pixeles simétrica, decorativa',
+    'mind.title': 'Cómo se conectan',
+    'mind.titleSoft': 'mis intereses',
+    'mind.hint': 'Pasa el cursor o toca un tema para ver qué lo une con los demás.',
+    'notes.title': 'Notas',
+    'notes.titleSoft': 'de campo',
+    'notes.intro': 'Entradas del diario, cada una con una notita al margen, como tomo apuntes en clase.',
+    'notes.all': 'Ver todo el diario',
+    'journal.title': 'Diario',
+    'journal.intro': 'Proyectos, psicología, juegos, pensamientos e ideas de videos.',
+    'journal.filter': 'Filtrar por tipo',
+    'journal.all': 'Todo',
+    'journal.empty': 'Todavía no hay entradas de este tipo.',
+    'games.title': 'Estante',
+    'games.titleSoft': 'de juegos',
+    'games.intro': 'El color de la portada indica el estado: durazno = jugando, matcha = terminado, lavanda = abandonado.',
+    'games.empty': 'Todavía no hay juegos. Agrega una entrada con kind: game.',
+    'entry.read': 'min de lectura',
+    'entry.back': 'Volver al diario',
+    'entry.otherLang': 'Read in English',
+    'entry.onlyThisLang': 'Solo en español',
+    'likert.q': '¿Te sirvió esta entrada?',
+    'likert.1': 'nada',
+    'likert.2': 'poco',
+    'likert.3': 'algo',
+    'likert.4': 'bastante',
+    'likert.5': 'mucho',
+    'likert.thanks': '¡Gracias por responder!',
+    'likert.hint': 'Anónimo.',
+    'sample': 'ejemplo',
+    'footer.subscribe': 'Recibe nuevas entradas por RSS.',
+    'footer.made': 'Hecho con Astro, en Cloudflare',
+    'kind.project': 'proyecto',
+    'kind.psychology': 'psicología',
+    'kind.game': 'juego',
+    'kind.thought': 'pensamiento',
+    'kind.video-idea': 'idea de video',
+    'status.playing': 'jugando',
+    'status.finished': 'terminado',
+    'status.dropped': 'abandonado',
+  },
+  en: {
+    'site.tagline': "Cesar's journal",
+    'nav.journal': 'Journal',
+    'nav.games': 'Games',
+    'nav.subscribe': 'Subscribe',
+    'theme.label': 'Theme',
+    'theme.auto': 'Auto',
+    'theme.light': 'Light',
+    'theme.dark': 'Dark',
+    'hero.chip.engineer': 'Software engineer',
+    'hero.chip.psych': 'Psychology student',
+    'hero.l1': 'I build software,',
+    'hero.circled': 'study the mind',
+    'hero.and': 'and',
+    'hero.write': 'write',
+    'hero.rest': 'about games, art and the way people think.',
+    'hero.cta.journal': 'Read the journal',
+    'hero.cta.mind': 'How it connects',
+    'hero.now.building': 'building',
+    'inkblot.card': 'Card',
+    'inkblot.label': 'pixel inkblot',
+    'inkblot.question': 'what do you see?',
+    'inkblot.new': 'New card',
+    'inkblot.fine': 'Just for fun, not a test.',
+    'inkblot.aria': 'A symmetric pixel inkblot, decorative',
+    'mind.title': 'How my interests',
+    'mind.titleSoft': 'connect',
+    'mind.hint': 'Hover or tap a topic to see what links it to the others.',
+    'notes.title': 'Field',
+    'notes.titleSoft': 'notes',
+    'notes.intro': 'Journal entries, each with a small handwritten note in the margin, the way I take notes in class.',
+    'notes.all': 'See the whole journal',
+    'journal.title': 'Journal',
+    'journal.intro': 'Projects, psychology, games, thoughts and video ideas.',
+    'journal.filter': 'Filter by type',
+    'journal.all': 'All',
+    'journal.empty': 'No entries of this type yet.',
+    'games.title': 'Game',
+    'games.titleSoft': 'shelf',
+    'games.intro': 'The cover color shows the status: peach = playing, matcha = finished, lavender = dropped.',
+    'games.empty': 'No games yet. Add an entry with kind: game.',
+    'entry.read': 'min read',
+    'entry.back': 'Back to the journal',
+    'entry.otherLang': 'Leer en español',
+    'entry.onlyThisLang': 'Only in English',
+    'likert.q': 'Was this entry useful to you?',
+    'likert.1': 'not at all',
+    'likert.2': 'a little',
+    'likert.3': 'somewhat',
+    'likert.4': 'quite',
+    'likert.5': 'a lot',
+    'likert.thanks': 'Thanks for answering!',
+    'likert.hint': 'Anonymous.',
+    'sample': 'sample',
+    'footer.subscribe': 'Get new entries by RSS.',
+    'footer.made': 'Made with Astro, hosted on Cloudflare',
+    'kind.project': 'project',
+    'kind.psychology': 'psychology',
+    'kind.game': 'game',
+    'kind.thought': 'thought',
+    'kind.video-idea': 'video idea',
+    'status.playing': 'playing',
+    'status.finished': 'finished',
+    'status.dropped': 'dropped',
+  },
+} as const;
+
+export type UiKey = keyof (typeof ui)['es'];
+
+export function useT(lang: Lang) {
+  return (key: UiKey): string => ui[lang][key];
+}
+
+export function otherLang(lang: Lang): Lang {
+  return lang === 'es' ? 'en' : 'es';
+}
+
+const dateFmt = {
+  es: new Intl.DateTimeFormat('es-PE', { dateStyle: 'medium', timeZone: 'UTC' }),
+  en: new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeZone: 'UTC' }),
+};
+
+export function formatDate(date: Date, lang: Lang): string {
+  return dateFmt[lang].format(date);
+}
+
+/** ISO day (YYYY-MM-DD), used in the mono date column. */
+export function isoDay(date: Date): string {
+  return date.toISOString().slice(0, 10);
+}
