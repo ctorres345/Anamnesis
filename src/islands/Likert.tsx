@@ -1,4 +1,4 @@
-import { useId, useState } from 'react';
+import { useId, useState } from 'preact/hooks';
 
 interface Props {
   question: string;

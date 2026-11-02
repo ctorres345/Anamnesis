@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import type { Lang } from '../lib/i18n';
 import { EDGES, NODES, type NodeId } from '../lib/mindmap';
 

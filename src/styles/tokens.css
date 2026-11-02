@@ -3,13 +3,14 @@
   Matcha is the main color, lavender the second. One pastel per kind of entry.
   Light values on :root; dark values in the two blocks below (system setting and manual toggle).
 */
-@import '@fontsource/hanken-grotesk/400.css';
-@import '@fontsource/hanken-grotesk/500.css';
-@import '@fontsource/hanken-grotesk/600.css';
-@import '@fontsource/hanken-grotesk/700.css';
-@import '@fontsource/geist-mono/400.css';
-@import '@fontsource/geist-mono/500.css';
-@import '@fontsource/caveat/600.css';
+/* Latin subset only: covers English and Spanish (á é í ó ú ñ ¿ ¡). */
+@import '@fontsource/hanken-grotesk/latin-400.css';
+@import '@fontsource/hanken-grotesk/latin-500.css';
+@import '@fontsource/hanken-grotesk/latin-600.css';
+@import '@fontsource/hanken-grotesk/latin-700.css';
+@import '@fontsource/geist-mono/latin-400.css';
+@import '@fontsource/geist-mono/latin-500.css';
+@import '@fontsource/caveat/latin-600.css';
 
 :root {
   /* surfaces */

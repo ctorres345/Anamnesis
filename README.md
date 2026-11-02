@@ -8,4 +8,5 @@ npm run dev
 ```
 
 - Writing a post (and the Obsidian setup): [docs/WRITING.md](docs/WRITING.md)
-- Colors, fonts and components: [docs/DESIGN-SYSTEM.md](docs/DESIGN-SYSTEM.md)
+- Colors, fonts and components (design tokens): [docs/DESIGN-SYSTEM.md](docs/DESIGN-SYSTEM.md)
+- Architecture and system design: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)

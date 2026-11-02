@@ -1,0 +1,184 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { LANGS, otherLang, type Lang } from '../../lib/i18n';
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+const REPO = 'https://github.com/ctorres345/Anamnesis';
+
+type Text = Record<Lang, string>;
+interface Tool { name: string; href: string; what: Text; why: Text }
+interface Layer { id: string; kind: string; title: Text; tools: Tool[] }
+
+const copy = {
+  title: { es: 'Cómo está hecho', en: 'How this site is built' },
+  soft: { es: 'este sitio', en: '' },
+  intro: {
+    es: 'Un sitio estático: cada página se arma una vez al publicar y se sirve como archivo. Es rápido, barato de mantener y no guarda datos de nadie.',
+    en: 'A static site: every page is built once when I publish and served as a file. It is fast, cheap to run and stores nobody’s data.',
+  },
+  flowTitle: { es: 'De una nota a la web', en: 'From a note to the web' },
+  layersTitle: { es: 'Las piezas', en: 'The pieces' },
+  why: { es: 'Por qué', en: 'Why' },
+  notTitle: { es: 'Lo que no hay', en: 'What isn’t here' },
+  source: { es: 'Ver el código en GitHub', en: 'See the code on GitHub' },
+} satisfies Record<string, Text>;
+
+const facts: { value: string; label: Text }[] = [
+  { value: '$0', label: { es: 'al mes de hosting', en: 'per month for hosting' } },
+  { value: '0', label: { es: 'cookies', en: 'cookies' } },
+  { value: '2', label: { es: 'idiomas', en: 'languages' } },
+  { value: '1', label: { es: 'archivo .md por entrada', en: '.md file per entry' } },
+];
+
+const flow: { title: Text; text: Text }[] = [
+  { title: { es: 'Escribo', en: 'Write' }, text: { es: 'Una nota en Obsidian, con una plantilla por tipo de entrada.', en: 'A note in Obsidian, with one template per kind of entry.' } },
+  { title: { es: 'Subo', en: 'Push' }, text: { es: 'Obsidian Git hace commit y push al repositorio en GitHub.', en: 'Obsidian Git commits and pushes to the GitHub repo.' } },
+  { title: { es: 'Se construye', en: 'Build' }, text: { es: 'Cloudflare corre Astro: revisa cada entrada y genera las páginas.', en: 'Cloudflare runs Astro: it checks every entry and builds the pages.' } },
+  { title: { es: 'Sale en vivo', en: 'Live' }, text: { es: 'Las páginas se sirven desde la red de Cloudflare en cjtech.dev.', en: 'Pages are served from Cloudflare’s network at cjtech.dev.' } },
+];
+
+const layers: Layer[] = [
+  {
+    id: 'content', kind: 'thought', title: { es: 'Contenido', en: 'Content' },
+    tools: [
+      { name: 'Markdown + MDX', href: 'https://mdxjs.com', what: { es: 'Cada entrada es un archivo de texto con propiedades arriba.', en: 'Each entry is a text file with properties on top.' }, why: { es: 'Es portable y lo puedo escribir en cualquier editor.', en: 'Portable, and I can write it in any editor.' } },
+      { name: 'Obsidian', href: 'https://obsidian.md', what: { es: 'Donde escribo, con plantillas y Obsidian Git.', en: 'Where I write, with templates and Obsidian Git.' }, why: { es: 'Ya tomo apuntes ahí; publicar es un push.', en: 'I already take notes there; publishing is one push.' } },
+      { name: 'Content Collections + Zod', href: 'https://docs.astro.build/en/guides/content-collections/', what: { es: 'Revisa que cada entrada tenga los campos correctos.', en: 'Checks that each entry has the right fields.' }, why: { es: 'Un error en una entrada detiene la publicación en vez de romper la página.', en: 'A mistake in an entry stops the publish instead of breaking the page.' } },
+    ],
+  },
+  {
+    id: 'framework', kind: 'project', title: { es: 'Sitio', en: 'Site' },
+    tools: [
+      { name: 'Astro', href: 'https://astro.build', what: { es: 'Convierte las entradas en páginas HTML.', en: 'Turns entries into HTML pages.' }, why: { es: 'Hecho para sitios de contenido: casi no envía JavaScript.', en: 'Made for content sites: ships almost no JavaScript.' } },
+      { name: 'Preact islands', href: 'https://preactjs.com', what: { es: 'Solo las partes interactivas: la mancha, el mapa mental, los filtros y la escala.', en: 'Only the interactive parts: inkblot, mind map, filters and scale.' }, why: { es: 'Mismo código que React en unos 4 KB.', en: 'Same code as React in about 4 KB.' } },
+      { name: 'TypeScript', href: 'https://www.typescriptlang.org', what: { es: 'Tipos en todo el código.', en: 'Types across the code.' }, why: { es: 'Atrapa errores antes de publicar.', en: 'Catches mistakes before publishing.' } },
+    ],
+  },
+  {
+    id: 'design', kind: 'psychology', title: { es: 'Diseño', en: 'Design' },
+    tools: [
+      { name: 'CSS + design tokens', href: `${REPO}/blob/main/docs/DESIGN-SYSTEM.md`, what: { es: 'Colores, fuentes y espacios en un solo archivo, con modo claro y oscuro.', en: 'Colors, fonts and spacing in one file, with light and dark mode.' }, why: { es: 'Cambiar el estilo es cambiar un archivo.', en: 'Changing the look means changing one file.' } },
+      { name: 'Fontsource', href: 'https://fontsource.org', what: { es: 'Hanken Grotesk, Geist Mono y Caveat, alojadas aquí mismo.', en: 'Hanken Grotesk, Geist Mono and Caveat, self-hosted.' }, why: { es: 'Sin pedir nada a otros servidores.', en: 'No requests to third-party servers.' } },
+      { name: 'View Transitions', href: 'https://docs.astro.build/en/guides/view-transitions/', what: { es: 'Transiciones suaves entre páginas.', en: 'Smooth changes between pages.' }, why: { es: 'Se siente como una app sin serlo.', en: 'Feels like an app without being one.' } },
+    ],
+  },
+  {
+    id: 'quality', kind: 'video-idea', title: { es: 'Calidad', en: 'Quality' },
+    tools: [
+      { name: 'Vitest', href: 'https://vitest.dev', what: { es: 'Pruebas automáticas.', en: 'Automated tests.' }, why: { es: 'Por ejemplo, que la mancha siempre sea simétrica.', en: 'For example, that the inkblot is always symmetric.' } },
+      { name: 'oxlint', href: 'https://oxc.rs', what: { es: 'Revisa el estilo del código.', en: 'Checks code style.' }, why: { es: 'Muy rápido, el mismo que uso en Yuyay.', en: 'Very fast, the same one I use in Yuyay.' } },
+      { name: 'Claude Code', href: 'https://claude.com/claude-code', what: { es: 'Me ayuda a planear y construir.', en: 'Helps me plan and build.' }, why: { es: 'Desarrollo solo, con pocas horas a la semana.', en: 'I build alone, with few hours a week.' } },
+    ],
+  },
+  {
+    id: 'hosting', kind: 'game', title: { es: 'Hosting', en: 'Hosting' },
+    tools: [
+      { name: 'Cloudflare Workers', href: 'https://developers.cloudflare.com/workers/static-assets/', what: { es: 'Sirve las páginas y construye el sitio en cada push.', en: 'Serves the pages and builds the site on every push.' }, why: { es: 'Plan gratis, rápido en Latinoamérica, igual que Yuyay.', en: 'Free plan, fast in Latin America, same as Yuyay.' } },
+      { name: 'GitHub', href: REPO, what: { es: 'Guarda el código y el historial de cada entrada.', en: 'Stores the code and the history of every entry.' }, why: { es: 'Si algo sale mal, vuelvo a la versión anterior.', en: 'If something breaks, I go back to the previous version.' } },
+      { name: 'RSS + sitemap', href: `/${lang}/rss.xml`, what: { es: 'Feed por idioma y mapa del sitio.', en: 'One feed per language and a sitemap.' }, why: { es: 'Para lectores de RSS y buscadores.', en: 'For feed readers and search engines.' } },
+    ],
+  },
+];
+
+const notHere: Text[] = [
+  { es: 'Base de datos ni cuentas de usuario', en: 'A database or user accounts' },
+  { es: 'Cookies, anuncios o rastreo de visitantes', en: 'Cookies, ads or visitor tracking' },
+  { es: 'Servicios de pago', en: 'Paid services' },
+];
+---
+
+<BaseLayout lang={lang} title={copy.title[lang]} description={copy.intro[lang]} altPath={`/${otherLang(lang)}/stack/`}>
+  <section class="block pad">
+    <div class="sec-head">
+      <h1>{copy.title[lang]} {copy.soft[lang] && <span class="soft">{copy.soft[lang]}</span>}</h1>
+      <p>{copy.intro[lang]}</p>
+    </div>
+    <dl class="facts">
+      {facts.map((f) => (
+        <div><dt>{f.label[lang]}</dt><dd>{f.value}</dd></div>
+      ))}
+    </dl>
+  </section>
+
+  <section class="flow-band">
+    <div class="pad">
+      <h2>{copy.flowTitle[lang]}</h2>
+      <ol class="flow">
+        {flow.map((s, i) => (
+          <li>
+            <span class="n mono">{String(i + 1).padStart(2, '0')}</span>
+            <b>{s.title[lang]}</b>
+            <span>{s.text[lang]}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="block pad">
+    <h2 class="h2">{copy.layersTitle[lang]}</h2>
+    {layers.map((layer) => (
+      <div class="layer" data-kind={layer.kind}>
+        <h3><i aria-hidden="true"></i>{layer.title[lang]}</h3>
+        <div class="tools">
+          {layer.tools.map((tool) => (
+            <a class="tool" href={tool.href}>
+              <b>{tool.name} <span aria-hidden="true">↗</span></b>
+              <span>{tool.what[lang]}</span>
+              <small><span class="mono">{copy.why[lang]}:</span> {tool.why[lang]}</small>
+            </a>
+          ))}
+        </div>
+      </div>
+    ))}
+  </section>
+
+  <section class="block pad" style="padding-top:0">
+    <div class="not">
+      <h2 class="h2">{copy.notTitle[lang]}</h2>
+      <ul>{notHere.map((n) => <li>{n[lang]}</li>)}</ul>
+      <a class="btn dark" href={REPO}>{copy.source[lang]} ↗</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 0; }
+  .facts div { border: 1px solid var(--line); border-radius: var(--radius-m); padding: 14px 16px; display: flex; flex-direction: column-reverse; gap: 2px; }
+  .facts dt { font: 400 12px var(--font-mono); color: var(--muted); }
+  .facts dd { margin: 0; font-weight: 700; font-size: var(--step-3); letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; }
+
+  .flow-band { background: var(--lavender-soft); padding-block: clamp(30px, 4vw, 44px); }
+  .flow-band h2, .h2 { margin: 0 0 18px; font-weight: 600; font-size: var(--step-2); letter-spacing: -0.03em; }
+  .flow { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; counter-reset: none; }
+  .flow li { background: var(--sheet); border-radius: var(--radius-m); padding: 16px; display: grid; gap: 6px; align-content: start; position: relative; }
+  .flow li:not(:last-child)::after { content: '→'; position: absolute; right: -11px; top: 16px; color: var(--lavender-deep); font-weight: 700; }
+  .flow .n { font-size: 12px; color: var(--lavender-deep); }
+  .flow b { font-size: 18px; }
+  .flow span:last-child { color: var(--muted); font-size: 14px; }
+
+  .layer { display: grid; grid-template-columns: minmax(0, 12ch) minmax(0, 1fr); gap: 16px 28px; padding-block: 22px; border-top: 1px solid var(--line); }
+  .layer h3 { margin: 0; font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .layer h3 i { width: 10px; height: 10px; border-radius: 2px; background: var(--hl); display: block; }
+  .tools { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .tool { border: 1px solid var(--line); border-radius: var(--radius-m); padding: 14px 16px; display: grid; gap: 6px; align-content: start; text-decoration: none; transition: background var(--dur), transform var(--dur); }
+  .tool:hover { background: var(--hl); color: var(--on-pastel); transform: translateY(-3px); }
+  .tool span { font-size: 14px; }
+  .tool small { font-size: 13px; color: var(--muted); }
+  .tool:hover small { color: var(--on-pastel); }
+  .tool b span { color: var(--muted); font-weight: 400; }
+
+  .not { border: 1px dashed var(--line); border-radius: var(--radius-l); padding: clamp(18px, 3vw, 28px); }
+  .not ul { margin: 0 0 18px; padding-left: 20px; display: grid; gap: 4px; }
+
+  @media (max-width: 860px) {
+    .facts, .flow { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .flow li::after { display: none; }
+    .layer { grid-template-columns: minmax(0, 1fr); }
+    .tools { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

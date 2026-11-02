@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState } from 'preact/hooks';
 import { cardNumeral, makeBlot } from '../lib/inkblot';
 
 interface Props {
