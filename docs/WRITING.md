@@ -1,5 +1,7 @@
 # Writing a post
 
+> The full step-by-step guide lives inside the Obsidian vault: `src/content/journal/_guide/` (start with `00 Start here.md`). It is not published.
+
 Every post is one Markdown file. Spanish posts go in `src/content/journal/es/`, English posts in `src/content/journal/en/`. The file name becomes the URL: `es/mi-post.md` → `cjtech.dev/es/journal/mi-post/`.
 
 ## Steps
@@ -31,7 +33,7 @@ If a property is wrong (for example `rating: 7`), `npm run build` stops and says
 1. Clone the repo on your computer.
 2. In Obsidian: **Open folder as vault** → choose `src/content/journal`.
 3. Settings → **Templates** (core plugin): template folder = `_templates`.
-4. Settings → **Files and links**: turn off "Use [[Wikilinks]]" for now (wikilink support comes later), and set "Default location for new attachments" to "In subfolder under current folder", name `assets`.
+4. Settings → **Files and links**: turn off "Use [[Wikilinks]]" for now (wikilink support comes later), set "New link format" to "Relative path to file", and set "Default location for new attachments" to "In subfolder under current folder", name `assets`.
 5. Install the community plugin **Obsidian Git**. Use "Commit and push" when a post is ready, and "Pull" before you start writing so you get changes made with Claude Code.
 
 New post in Obsidian: create a note inside `es/` or `en/` → command "Insert template" → pick the kind → fill the properties.

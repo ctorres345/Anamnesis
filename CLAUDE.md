@@ -13,7 +13,7 @@ Docs: `docs/ARCHITECTURE.md` (architecture and system design), `docs/DESIGN-SYST
 
 ## How it's built
 - Astro (static output) + Preact islands (`src/islands/`, hooks from `preact/hooks`) only for interactive parts: inkblot, mind map, journal filters, Likert scale. Everything else is plain HTML.
-- Posts: `src/content/journal/{es,en}/*.md`, schema in `src/content.config.ts`. `translationKey` links the es and en versions. `_templates/` holds Obsidian templates and is not published.
+- Posts: `src/content/journal/{es,en}/*.md`, schema in `src/content.config.ts`. `translationKey` links the es and en versions. `_templates/` (Obsidian templates) and `_guide/` (Cesar's maintenance guide, keep it current when workflows change) are not published.
 - UI text: `src/lib/i18n.ts` (es and en). Post text never goes there.
 - Design tokens: `src/styles/tokens.css`. Use tokens, never literal colors. Every color needs a dark value.
 - The Stack page (`src/pages/[lang]/stack.astro`) lists the tech stack; update it when a tool changes.

@@ -82,6 +82,8 @@ const d = entry.data;
   .prose :global(blockquote) { margin: 18px 0; padding: 10px 16px; border-radius: 12px; background: var(--lavender-soft); }
   .prose :global(code) { font-family: var(--font-mono); font-size: 0.9em; background: var(--lavender-soft); padding: 1px 5px; border-radius: 4px; }
   .prose :global(img) { border-radius: var(--radius-m); }
+  .prose :global(iframe) { width: 100%; aspect-ratio: 16 / 9; height: auto; border: 0; border-radius: var(--radius-m); }
+  .prose :global(figcaption) { font: 400 13px var(--font-mono); color: var(--muted); margin-top: 6px; }
   .margin { display: grid; gap: 16px; align-content: start; }
   .note { transform: rotate(-1.5deg); }
   .facts { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; font: 400 13px var(--font-mono); background: var(--hl); color: var(--on-pastel); padding: 12px 14px; border-radius: var(--radius-m); }
