@@ -1,0 +1,95 @@
+/*
+  Design tokens: "Mind Notebook" (chosen 2026-11-02).
+  Matcha is the main color, lavender the second. One pastel per kind of entry.
+  Light values on :root; dark values in the two blocks below (system setting and manual toggle).
+*/
+@import '@fontsource/hanken-grotesk/400.css';
+@import '@fontsource/hanken-grotesk/500.css';
+@import '@fontsource/hanken-grotesk/600.css';
+@import '@fontsource/hanken-grotesk/700.css';
+@import '@fontsource/geist-mono/400.css';
+@import '@fontsource/geist-mono/500.css';
+@import '@fontsource/caveat/600.css';
+
+:root {
+  /* surfaces */
+  --paper: #eef1ea;            /* page behind the sheet (graph paper) */
+  --grid: rgba(60, 80, 50, 0.07);
+  --sheet: #fdfdfb;            /* the rounded white sheet */
+  --line: #e3e7df;
+
+  /* text */
+  --ink: #1d231e;
+  --muted: #6f776f;            /* AA on --sheet */
+  --on-pastel: #1d231e;        /* text on any pastel fill, both themes */
+
+  /* brand */
+  --matcha: #b9d19a;
+  --matcha-deep: #5f7d45;      /* matcha for text and icons */
+  --lavender: #d8cff3;
+  --lavender-soft: #f1edfb;
+  --lavender-deep: #6a58a8;    /* lavender for text, links, focus */
+
+  /* one pastel per kind */
+  --sky: #c6dff2;              /* project */
+  --peach: #f6d0b5;            /* game */
+  --butter: #f2e7a8;           /* video idea */
+  /* psychology = --lavender, thought = --matcha */
+
+  /* type */
+  --font-display: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-hand: 'Caveat', 'Comic Sans MS', cursive;
+
+  --step-0: 1rem;
+  --step-1: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
+  --step-2: clamp(1.5rem, 1.2rem + 1.4vw, 2.125rem);
+  --step-3: clamp(1.875rem, 1.4rem + 2.4vw, 3rem);
+  --step-4: clamp(2.25rem, 1.4rem + 4.2vw, 4.375rem);
+  --step-giant: clamp(3.5rem, 13.5vw, 11.5rem);
+
+  /* space, radius, motion */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 40px;
+  --space-7: 64px;
+  --gutter: clamp(18px, 4.5vw, 64px);
+  --radius-s: 6px;
+  --radius-m: 16px;
+  --radius-l: 24px;
+  --radius-sheet: 28px;
+  --ease-pop: cubic-bezier(0.3, 1.4, 0.6, 1);
+  --dur: 0.25s;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --paper: #121511; --grid: rgba(185, 209, 154, 0.05); --sheet: #191d18; --line: #2a3027;
+    --ink: #e9eee4; --muted: #98a094; --on-pastel: #161a15;
+    --matcha: #a9c48a; --matcha-deep: #b9d19a; --lavender: #c3b8e8; --lavender-soft: #23212e; --lavender-deep: #cdc3f0;
+    --sky: #afcde6; --peach: #eebd9c; --butter: #e5d991;
+  }
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --paper: #121511; --grid: rgba(185, 209, 154, 0.05); --sheet: #191d18; --line: #2a3027;
+  --ink: #e9eee4; --muted: #98a094; --on-pastel: #161a15;
+  --matcha: #a9c48a; --matcha-deep: #b9d19a; --lavender: #c3b8e8; --lavender-soft: #23212e; --lavender-deep: #cdc3f0;
+  --sky: #afcde6; --peach: #eebd9c; --butter: #e5d991;
+}
+
+/* kind -> color. Use data-kind="..." on any element and read var(--hl). */
+[data-kind='project'] { --hl: var(--sky); }
+[data-kind='psychology'] { --hl: var(--lavender); }
+[data-kind='game'] { --hl: var(--peach); }
+[data-kind='thought'] { --hl: var(--matcha); }
+[data-kind='video-idea'] { --hl: var(--butter); }
+
+/* game status -> cover color */
+[data-status='playing'] { --hl: var(--peach); }
+[data-status='finished'] { --hl: var(--matcha); }
+[data-status='dropped'] { --hl: var(--lavender); }

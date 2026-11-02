@@ -1,0 +1,93 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Likert from '../../../islands/Likert';
+import { formatDate, otherLang, useT } from '../../../lib/i18n';
+import { entryUrl, findTranslation, readingMinutes, splitId, type Entry } from '../../../lib/journal';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('journal', (e) => import.meta.env.DEV || !e.data.draft);
+  return entries.map((entry) => {
+    const { lang, slug } = splitId(entry.id);
+    return { params: { lang, slug }, props: { entry } };
+  });
+}
+
+const { entry } = Astro.props as { entry: Entry };
+const { lang } = splitId(entry.id);
+const t = useT(lang);
+const alt = otherLang(lang);
+const translation = await findTranslation(entry, alt);
+const { Content } = await render(entry);
+const d = entry.data;
+---
+
+<BaseLayout
+  lang={lang}
+  title={d.title}
+  description={d.summary}
+  altPath={translation ? entryUrl(translation) : undefined}
+>
+  <article class="block pad" data-kind={d.kind}>
+    <div class="entry">
+      <div class="body">
+        <div class="meta">
+          <span>{formatDate(d.date, lang)}</span>
+          <span class="chip-kind">{t(`kind.${d.kind}`)}</span>
+          <span>{readingMinutes(entry.body)} {t('entry.read')}</span>
+          {d.sample && <span class="badge-sample">{t('sample')}</span>}
+          {d.draft && <span class="badge-sample">draft</span>}
+        </div>
+        <h1>{d.title}</h1>
+        {d.summary && <p class="lede">{d.summary}</p>}
+        <div class="prose">
+          <Content />
+        </div>
+      </div>
+      <aside class="margin">
+        {d.note && <span class="hand note">↳ {d.note}</span>}
+        {d.game && (
+          <dl class="facts">
+            <dt>{t('nav.games')}</dt><dd>{d.game.platform}</dd>
+            <dt>status</dt><dd>{t(`status.${d.game.status}`)}</dd>
+            {d.game.hours !== undefined && <><dt>h</dt><dd>{d.game.hours}</dd></>}
+            {d.game.rating !== undefined && <><dt>★</dt><dd>{d.game.rating}/5</dd></>}
+          </dl>
+        )}
+        {d.project?.url && <a class="btn" href={d.project.url}>{d.project.url.replace(/^https?:\/\//, '')} ↗</a>}
+        <Likert
+          client:visible
+          question={t('likert.q')}
+          options={[t('likert.1'), t('likert.2'), t('likert.3'), t('likert.4'), t('likert.5')]}
+          thanks={t('likert.thanks')}
+          hint={t('likert.hint')}
+        />
+        <p class="lang-note">
+          {translation ? <a href={entryUrl(translation)} hreflang={alt}>{t('entry.otherLang')} →</a> : t('entry.onlyThisLang')}
+        </p>
+      </aside>
+    </div>
+    <p class="back"><a class="btn" href={`/${lang}/journal/`}>← {t('entry.back')}</a></p>
+  </article>
+</BaseLayout>
+
+<style>
+  .entry { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 300px); gap: clamp(24px, 4vw, 56px); }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font: 400 12px var(--font-mono); color: var(--muted); }
+  h1 { font-weight: 600; font-size: var(--step-3); letter-spacing: -0.03em; line-height: 1.08; margin: 12px 0 14px; }
+  .lede { font-size: var(--step-1); color: var(--muted); margin: 0 0 18px; max-width: 60ch; }
+  .prose { font-size: 17px; line-height: 1.7; max-width: 66ch; }
+  .prose :global(h2) { font-size: var(--step-2); letter-spacing: -0.02em; margin: 1.6em 0 0.4em; }
+  .prose :global(a) { color: var(--lavender-deep); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  .prose :global(blockquote) { margin: 18px 0; padding: 10px 16px; border-radius: 12px; background: var(--lavender-soft); }
+  .prose :global(code) { font-family: var(--font-mono); font-size: 0.9em; background: var(--lavender-soft); padding: 1px 5px; border-radius: 4px; }
+  .prose :global(img) { border-radius: var(--radius-m); }
+  .margin { display: grid; gap: 16px; align-content: start; }
+  .note { transform: rotate(-1.5deg); }
+  .facts { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; font: 400 13px var(--font-mono); background: var(--hl); color: var(--on-pastel); padding: 12px 14px; border-radius: var(--radius-m); }
+  .facts dd { margin: 0; }
+  .lang-note { margin: 0; font: 400 13px var(--font-mono); color: var(--muted); }
+  .lang-note a { color: var(--lavender-deep); }
+  .back { margin: 40px 0 0; }
+  @media (max-width: 860px) { .entry { grid-template-columns: minmax(0, 1fr); } }
+</style>

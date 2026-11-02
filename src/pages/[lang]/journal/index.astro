@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import JournalList from '../../../islands/JournalList';
+import { KINDS } from '../../../content.config';
+import { LANGS, otherLang, useT, type Lang } from '../../../lib/i18n';
+import { getEntries, toRows } from '../../../lib/journal';
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+const t = useT(lang);
+const rows = toRows(await getEntries(lang), lang);
+---
+
+<BaseLayout lang={lang} title={t('journal.title')} description={t('journal.intro')} altPath={`/${otherLang(lang)}/journal/`}>
+  <section class="block pad">
+    <div class="sec-head">
+      <h1>{t('journal.title')}</h1>
+      <p>{t('journal.intro')}</p>
+    </div>
+    <JournalList
+      client:load
+      rows={rows}
+      sampleLabel={t('sample')}
+      filters={{
+        label: t('journal.filter'),
+        all: t('journal.all'),
+        empty: t('journal.empty'),
+        sample: t('sample'),
+        kinds: KINDS.map((k) => ({ kind: k, label: t(`kind.${k}`) })),
+      }}
+    />
+  </section>
+</BaseLayout>

@@ -1,0 +1,56 @@
+---
+import { useT, type Lang } from '../lib/i18n';
+interface Props { lang: Lang }
+const t = useT(Astro.props.lang);
+const options = [
+  { value: 'auto', label: t('theme.auto') },
+  { value: 'light', label: t('theme.light') },
+  { value: 'dark', label: t('theme.dark') },
+];
+---
+
+<div class="seg" role="group" aria-label={t('theme.label')} data-theme-toggle>
+  {options.map((o) => (
+    <button type="button" data-theme-set={o.value} aria-pressed={o.value === 'auto' ? 'true' : 'false'}>{o.label}</button>
+  ))}
+</div>
+
+<style>
+  .seg { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 99px; background: var(--sheet); }
+  button { border: 0; background: none; padding: 4px 10px; border-radius: 99px; cursor: pointer; color: var(--muted); font-size: 13px; }
+  button[aria-pressed='true'] { background: var(--ink); color: var(--sheet); }
+</style>
+
+<script>
+  function current(): string {
+    try {
+      return localStorage.getItem('theme') ?? 'auto';
+    } catch {
+      return 'auto';
+    }
+  }
+  function apply(value: string) {
+    if (value === 'light' || value === 'dark') document.documentElement.setAttribute('data-theme', value);
+    else document.documentElement.removeAttribute('data-theme');
+    document.querySelectorAll('[data-theme-set]').forEach((b) => {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-theme-set') === value));
+    });
+  }
+  function init() {
+    apply(current());
+    document.querySelectorAll<HTMLButtonElement>('[data-theme-set]').forEach((b) => {
+      b.addEventListener('click', () => {
+        const v = b.dataset.themeSet ?? 'auto';
+        try {
+          if (v === 'auto') localStorage.removeItem('theme');
+          else localStorage.setItem('theme', v);
+        } catch {}
+        apply(v);
+      });
+    });
+  }
+  // Runs on first load and after every view-transition navigation.
+  document.addEventListener('astro:page-load', init);
+  // Keep the theme when the router swaps the page.
+  document.addEventListener('astro:after-swap', () => apply(current()));
+</script>
