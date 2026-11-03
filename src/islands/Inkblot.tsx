@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'preact/hooks';
+import { RefreshCw } from 'lucide-preact';
 import { cardNumeral, makeBlot } from '../lib/inkblot';
 
 interface Props {
@@ -31,7 +32,8 @@ export default function Inkblot({ labels }: Props) {
       <div className="ink-bottom">
         <span className="hand">{labels.question}</span>
         <button type="button" className="ink-btn" onClick={() => setN((v) => v + 1)}>
-          {labels.next} ↻
+          <RefreshCw size={14} aria-hidden="true" />
+          {labels.next}
         </button>
       </div>
       <figcaption className="ink-fine">{labels.fine}</figcaption>

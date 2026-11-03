@@ -53,10 +53,16 @@ h1, h2, h3 { text-wrap: balance; }
 .btn:hover { transform: translateY(-2px); }
 .btn.dark { background: var(--ink); color: var(--sheet); border-color: var(--ink); }
 
-.mark { background: linear-gradient(transparent 58%, var(--matcha) 58%, var(--matcha) 92%, transparent 92%); padding-inline: 0.06em; }
+.mark {
+  background: linear-gradient(transparent 58%, var(--matcha) 58%, var(--matcha) 92%, transparent 92%) no-repeat;
+  background-size: 100% 100%; padding-inline: 0.06em;
+  animation: highlight 0.7s 0.9s ease-out backwards;
+}
+/* Highlighter sweeps in once. The resting state is fully highlighted, so it's complete without motion. */
+@keyframes highlight { from { background-size: 0% 100%; } }
 
 .chip-kind {
-  justify-self: start; font: 500 12px var(--font-mono); padding: 4px 9px;
+  justify-self: start; display: inline-flex; align-items: center; gap: 5px; font: 500 12px var(--font-mono); padding: 4px 9px;
   border-radius: var(--radius-s); background: var(--hl); color: var(--on-pastel); white-space: nowrap;
 }
 .badge-sample {

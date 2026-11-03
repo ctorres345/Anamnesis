@@ -2,6 +2,12 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Likert from '../../../islands/Likert';
+import KindIcon from '../../../components/KindIcon.astro';
+import ArrowLeft from '@lucide/astro/icons/arrow-left';
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
+import Calendar from '@lucide/astro/icons/calendar';
+import Clock from '@lucide/astro/icons/clock';
 import { formatDate, otherLang, useT } from '../../../lib/i18n';
 import { entryUrl, findTranslation, readingMinutes, splitId, type Entry } from '../../../lib/journal';
 
@@ -32,9 +38,9 @@ const d = entry.data;
     <div class="entry">
       <div class="body">
         <div class="meta">
-          <span>{formatDate(d.date, lang)}</span>
-          <span class="chip-kind">{t(`kind.${d.kind}`)}</span>
-          <span>{readingMinutes(entry.body)} {t('entry.read')}</span>
+          <span class="ico"><Calendar size={13} aria-hidden="true" />{formatDate(d.date, lang)}</span>
+          <span class="chip-kind"><KindIcon kind={d.kind} size={12} />{t(`kind.${d.kind}`)}</span>
+          <span class="ico"><Clock size={13} aria-hidden="true" />{readingMinutes(entry.body)} {t('entry.read')}</span>
           {d.sample && <span class="badge-sample">{t('sample')}</span>}
           {d.draft && <span class="badge-sample">draft</span>}
         </div>
@@ -54,7 +60,7 @@ const d = entry.data;
             {d.game.rating !== undefined && <><dt>★</dt><dd>{d.game.rating}/5</dd></>}
           </dl>
         )}
-        {d.project?.url && <a class="btn" href={d.project.url}>{d.project.url.replace(/^https?:\/\//, '')} ↗</a>}
+        {d.project?.url && <a class="btn" href={d.project.url}>{d.project.url.replace(/^https?:\/\//, '')} <ArrowUpRight size={15} aria-hidden="true" /></a>}
         <Likert
           client:visible
           question={t('likert.q')}
@@ -63,11 +69,11 @@ const d = entry.data;
           hint={t('likert.hint')}
         />
         <p class="lang-note">
-          {translation ? <a href={entryUrl(translation)} hreflang={alt}>{t('entry.otherLang')} →</a> : t('entry.onlyThisLang')}
+          {translation ? <a href={entryUrl(translation)} hreflang={alt}>{t('entry.otherLang')} <ArrowRight size={13} aria-hidden="true" /></a> : t('entry.onlyThisLang')}
         </p>
       </aside>
     </div>
-    <p class="back"><a class="btn" href={`/${lang}/journal/`}>← {t('entry.back')}</a></p>
+    <p class="back"><a class="btn" href={`/${lang}/journal/`}><ArrowLeft size={16} aria-hidden="true" />{t('entry.back')}</a></p>
   </article>
 </BaseLayout>
 
@@ -84,6 +90,8 @@ const d = entry.data;
   .prose :global(img) { border-radius: var(--radius-m); }
   .prose :global(iframe) { width: 100%; aspect-ratio: 16 / 9; height: auto; border: 0; border-radius: var(--radius-m); }
   .prose :global(figcaption) { font: 400 13px var(--font-mono); color: var(--muted); margin-top: 6px; }
+  .ico { display: inline-flex; align-items: center; gap: 5px; }
+  .lang-note a { display: inline-flex; align-items: center; gap: 4px; }
   .margin { display: grid; gap: 16px; align-content: start; }
   .note { transform: rotate(-1.5deg); }
   .facts { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; font: 400 13px var(--font-mono); background: var(--hl); color: var(--on-pastel); padding: 12px 14px; border-radius: var(--radius-m); }

@@ -1,6 +1,7 @@
 ---
 import { otherLang, useT, type Lang } from '../lib/i18n';
 import ThemeToggle from './ThemeToggle.astro';
+import Languages from '@lucide/astro/icons/languages';
 
 interface Props {
   lang: Lang;
@@ -25,7 +26,7 @@ const links = [
     ))}
   </nav>
   <a class="lang" href={altPath ?? `/${alt}/`} hreflang={alt} lang={alt}>
-    <b>{lang.toUpperCase()}</b> / {alt.toUpperCase()}
+    <Languages size={13} aria-hidden="true" /><b>{lang.toUpperCase()}</b> / {alt.toUpperCase()}
   </a>
   <ThemeToggle lang={lang} />
 </header>
@@ -41,6 +42,7 @@ const links = [
   .lang {
     font: 500 12px var(--font-mono); border: 1px solid var(--line); border-radius: 99px;
     padding: 4px 10px; color: var(--muted); text-decoration: none;
+    display: inline-flex; align-items: center; gap: 5px;
   }
   .lang b { color: var(--ink); }
   .lang:hover { background: var(--lavender-soft); }

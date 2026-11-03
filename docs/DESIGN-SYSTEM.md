@@ -29,7 +29,7 @@ Chosen on 2026-11-02. Reference mockup: https://claude.ai/artifact/Pq9GKt1Cj77ka
 | `--sheet` | `#fdfdfb` | `#191d18` | The rounded sheet, cards |
 | `--line` | `#e3e7df` | `#2a3027` | Hairlines, borders |
 | `--ink` | `#1d231e` | `#e9eee4` | Main text, dark buttons |
-| `--muted` | `#6f776f` | `#98a094` | Secondary text |
+| `--muted` | `#646b64` | `#98a094` | Secondary text |
 | `--on-pastel` | `#1d231e` | `#161a15` | Text on any pastel fill |
 
 ### Brand
@@ -49,6 +49,8 @@ Chosen on 2026-11-02. Reference mockup: https://claude.ai/artifact/Pq9GKt1Cj77ka
 | `game` | `--peach` | `#f6d0b5` | `#eebd9c` |
 | `thought` | `--matcha` | `#b9d19a` | `#a9c48a` |
 | `video-idea` | `--butter` | `#f2e7a8` | `#e5d991` |
+
+Deep versions for icons on the sheet: `--sky-deep` `#3d6f95` (dark `#afcde6`), `--peach-deep` `#b8612a` (dark `#eebd9c`).
 
 Game status uses the same pastels: `playing` = peach, `finished` = matcha, `dropped` = lavender.
 
@@ -75,6 +77,33 @@ Fonts are self-hosted with Fontsource, Latin subset only (covers English and Spa
 
 Headings use tight letter spacing (`-0.03em` to `-0.06em`) and `text-wrap: balance`. Body text stays under ~66 characters per line.
 
+## Icons
+- **Lucide** (`@lucide/astro` in `.astro` files, `lucide-preact` in islands). Line icons, 2px stroke, sized 12–16px next to text, `aria-hidden="true"` when a text label is next to them; icon-only buttons need `aria-label`.
+- Brand logos (Lucide has none): **Simple Icons**, only GitHub for now (`src/components/GithubMark.astro`). LinkedIn has no free logo there, so it stays as text.
+- No emoji in the interface.
+
+| Kind | Icon |
+|---|---|
+| project | `code-xml` |
+| psychology | `brain` |
+| game | `gamepad-2` |
+| thought | `pen-line` |
+| video-idea | `clapperboard` |
+
+Mapping lives in `src/components/KindIcon.astro` and `KIND_ICONS` in `src/islands/JournalList.tsx` (keep both in sync).
+
+| UI | Icon |
+|---|---|
+| Theme: auto / light / dark | `monitor` / `sun` / `moon` |
+| Language switch | `languages` |
+| External link / next / back | `arrow-up-right` / `arrow-right` / `arrow-left` |
+| New inkblot card | `refresh-cw` |
+| Date / reading time / hours | `calendar` / `clock` |
+| Rating | `star` (filled = on) |
+
+## Backgrounds: blobs
+Soft organic shapes generated in code (`src/lib/blob.ts`, component `src/components/Blob.astro`), the same idea as haikei.app but with no files to export. Same seed = same shape on every build. Use them only behind a section, low opacity, never behind running text.
+
 ## Space, shape and motion
 | Token | Value | Use |
 |---|---|---|
@@ -86,6 +115,8 @@ Headings use tight letter spacing (`-0.03em` to `-0.06em`) and `text-wrap: balan
 | `--radius-sheet` | 28px | The sheet |
 | `--dur` | 0.25s | Standard transition |
 | `--ease-pop` | `cubic-bezier(.3,1.4,.6,1)` | Playful bounce (inkblot cells, notes) |
+
+On the home page, the hand-drawn circle draws itself and the highlighter sweeps under "write" once. Both rest in their finished state, so with reduced motion they simply appear.
 
 ## Components
 | Component | File | Notes |
@@ -101,8 +132,11 @@ Headings use tight letter spacing (`-0.03em` to `-0.06em`) and `text-wrap: balan
 | Buttons | `.btn`, `.btn.dark` in `global.css` | Pill shape |
 | Highlighter | `.mark` in `global.css` | Matcha band under a word |
 
+## Trying palette changes
+Before changing colors, try them on a sample layout at [realtimecolors.com](https://www.realtimecolors.com): enter text `#1d231e`, background `#fdfdfb`, primary `#b9d19a`, secondary `#d8cff3`, accent `#6a58a8`, fonts Hanken Grotesk. Then update `tokens.css` and run `npm test`: the contrast test fails if a new color is too light.
+
 ## Accessibility
-- Text colors meet WCAG AA on their backgrounds in both themes.
+- Text and icon colors meet WCAG AA in both themes. `src/styles/tokens.test.ts` checks every pair on each `npm test`.
 - Visible focus ring (`--lavender-deep`) on every control; "skip to content" link.
 - Decorative graphics (inkblot, pixel icons) are hidden from screen readers.
 - All motion is disabled under `prefers-reduced-motion`.

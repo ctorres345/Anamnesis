@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { LANGS, otherLang, type Lang } from '../../lib/i18n';
+import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+import Github from '../../components/GithubMark.astro';
 
 export function getStaticPaths() {
   return LANGS.map((lang) => ({ params: { lang } }));
@@ -63,6 +66,7 @@ const layers: Layer[] = [
     tools: [
       { name: 'CSS + design tokens', href: `${REPO}/blob/main/docs/DESIGN-SYSTEM.md`, what: { es: 'Colores, fuentes y espacios en un solo archivo, con modo claro y oscuro.', en: 'Colors, fonts and spacing in one file, with light and dark mode.' }, why: { es: 'Cambiar el estilo es cambiar un archivo.', en: 'Changing the look means changing one file.' } },
       { name: 'Fontsource', href: 'https://fontsource.org', what: { es: 'Hanken Grotesk, Geist Mono y Caveat, alojadas aquí mismo.', en: 'Hanken Grotesk, Geist Mono and Caveat, self-hosted.' }, why: { es: 'Sin pedir nada a otros servidores.', en: 'No requests to third-party servers.' } },
+      { name: 'Lucide', href: 'https://lucide.dev', what: { es: 'Íconos de línea en botones, tipos de entrada y estrellas.', en: 'Line icons on buttons, entry types and stars.' }, why: { es: 'Íconos reales en vez de emojis; solo se envían los que se usan.', en: 'Real icons instead of emoji; only the ones used are shipped.' } },
       { name: 'View Transitions', href: 'https://docs.astro.build/en/guides/view-transitions/', what: { es: 'Transiciones suaves entre páginas.', en: 'Smooth changes between pages.' }, why: { es: 'Se siente como una app sin serlo.', en: 'Feels like an app without being one.' } },
     ],
   },
@@ -111,6 +115,7 @@ const notHere: Text[] = [
         {flow.map((s, i) => (
           <li>
             <span class="n mono">{String(i + 1).padStart(2, '0')}</span>
+            {i < flow.length - 1 && <span class="next" aria-hidden="true"><ArrowRight size={18} /></span>}
             <b>{s.title[lang]}</b>
             <span>{s.text[lang]}</span>
           </li>
@@ -127,7 +132,7 @@ const notHere: Text[] = [
         <div class="tools">
           {layer.tools.map((tool) => (
             <a class="tool" href={tool.href}>
-              <b>{tool.name} <span aria-hidden="true">↗</span></b>
+              <b>{tool.name} <ArrowUpRight size={14} aria-hidden="true" /></b>
               <span>{tool.what[lang]}</span>
               <small><span class="mono">{copy.why[lang]}:</span> {tool.why[lang]}</small>
             </a>
@@ -141,7 +146,7 @@ const notHere: Text[] = [
     <div class="not">
       <h2 class="h2">{copy.notTitle[lang]}</h2>
       <ul>{notHere.map((n) => <li>{n[lang]}</li>)}</ul>
-      <a class="btn dark" href={REPO}>{copy.source[lang]} ↗</a>
+      <a class="btn dark" href={REPO}><Github size={16} />{copy.source[lang]} <ArrowUpRight size={16} aria-hidden="true" /></a>
     </div>
   </section>
 </BaseLayout>
@@ -156,7 +161,7 @@ const notHere: Text[] = [
   .flow-band h2, .h2 { margin: 0 0 18px; font-weight: 600; font-size: var(--step-2); letter-spacing: -0.03em; }
   .flow { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; counter-reset: none; }
   .flow li { background: var(--sheet); border-radius: var(--radius-m); padding: 16px; display: grid; gap: 6px; align-content: start; position: relative; }
-  .flow li:not(:last-child)::after { content: '→'; position: absolute; right: -11px; top: 16px; color: var(--lavender-deep); font-weight: 700; }
+  .flow .next { position: absolute; right: -15px; top: 14px; z-index: 1; color: var(--lavender-deep); display: grid; }
   .flow .n { font-size: 12px; color: var(--lavender-deep); }
   .flow b { font-size: 18px; }
   .flow span:last-child { color: var(--muted); font-size: 14px; }
@@ -164,20 +169,21 @@ const notHere: Text[] = [
   .layer { display: grid; grid-template-columns: minmax(0, 12ch) minmax(0, 1fr); gap: 16px 28px; padding-block: 22px; border-top: 1px solid var(--line); }
   .layer h3 { margin: 0; font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
   .layer h3 i { width: 10px; height: 10px; border-radius: 2px; background: var(--hl); display: block; }
-  .tools { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
   .tool { border: 1px solid var(--line); border-radius: var(--radius-m); padding: 14px 16px; display: grid; gap: 6px; align-content: start; text-decoration: none; transition: background var(--dur), transform var(--dur); }
   .tool:hover { background: var(--hl); color: var(--on-pastel); transform: translateY(-3px); }
   .tool span { font-size: 14px; }
   .tool small { font-size: 13px; color: var(--muted); }
   .tool:hover small { color: var(--on-pastel); }
-  .tool b span { color: var(--muted); font-weight: 400; }
+  .tool b { display: inline-flex; align-items: center; gap: 4px; }
+  .tool b :global(svg) { color: var(--muted); }
 
   .not { border: 1px dashed var(--line); border-radius: var(--radius-l); padding: clamp(18px, 3vw, 28px); }
   .not ul { margin: 0 0 18px; padding-left: 20px; display: grid; gap: 4px; }
 
   @media (max-width: 860px) {
     .facts, .flow { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-    .flow li::after { display: none; }
+    .flow .next { display: none; }
     .layer { grid-template-columns: minmax(0, 1fr); }
     .tools { grid-template-columns: minmax(0, 1fr); }
   }

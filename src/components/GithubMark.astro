@@ -1,0 +1,8 @@
+---
+// GitHub logo from Simple Icons (CC0). Lucide has no brand logos.
+import { siGithub } from 'simple-icons';
+interface Props { size?: number }
+const { size = 16 } = Astro.props;
+---
+
+<svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={siGithub.path} /></svg>

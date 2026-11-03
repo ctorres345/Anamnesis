@@ -1,0 +1,21 @@
+---
+// Decorative SVG blob behind a section. Purely visual: hidden from screen readers.
+import { blobPath } from '../lib/blob';
+
+interface Props {
+  seed: number;
+  /** Any color token, e.g. "var(--matcha)". */
+  color: string;
+  class?: string;
+  opacity?: number;
+}
+const { seed, color, class: className, opacity = 0.55 } = Astro.props;
+---
+
+<svg class:list={['blob', className]} viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+  <path d={blobPath(seed)} fill={color} fill-opacity={opacity} />
+</svg>
+
+<style>
+  .blob { position: absolute; pointer-events: none; z-index: 0; overflow: visible; }
+</style>

@@ -21,7 +21,7 @@
 
   /* text */
   --ink: #1d231e;
-  --muted: #6f776f;            /* AA on --sheet */
+  --muted: #646b64;            /* AA on sheet, paper and lavender-soft (tested) */
   --on-pastel: #1d231e;        /* text on any pastel fill, both themes */
 
   /* brand */
@@ -35,6 +35,8 @@
   --sky: #c6dff2;              /* project */
   --peach: #f6d0b5;            /* game */
   --butter: #f2e7a8;           /* video idea */
+  --sky-deep: #3d6f95;         /* sky for icons and text */
+  --peach-deep: #b8612a;       /* peach for icons (rating stars) */
   /* psychology = --lavender, thought = --matcha */
 
   /* type */
@@ -72,7 +74,7 @@
     --paper: #121511; --grid: rgba(185, 209, 154, 0.05); --sheet: #191d18; --line: #2a3027;
     --ink: #e9eee4; --muted: #98a094; --on-pastel: #161a15;
     --matcha: #a9c48a; --matcha-deep: #b9d19a; --lavender: #c3b8e8; --lavender-soft: #23212e; --lavender-deep: #cdc3f0;
-    --sky: #afcde6; --peach: #eebd9c; --butter: #e5d991;
+    --sky: #afcde6; --peach: #eebd9c; --butter: #e5d991; --sky-deep: #afcde6; --peach-deep: #eebd9c;
   }
 }
 :root[data-theme='dark'] {
@@ -80,7 +82,7 @@
   --paper: #121511; --grid: rgba(185, 209, 154, 0.05); --sheet: #191d18; --line: #2a3027;
   --ink: #e9eee4; --muted: #98a094; --on-pastel: #161a15;
   --matcha: #a9c48a; --matcha-deep: #b9d19a; --lavender: #c3b8e8; --lavender-soft: #23212e; --lavender-deep: #cdc3f0;
-  --sky: #afcde6; --peach: #eebd9c; --butter: #e5d991;
+  --sky: #afcde6; --peach: #eebd9c; --butter: #e5d991; --sky-deep: #afcde6; --peach-deep: #eebd9c;
 }
 
 /* kind -> color. Use data-kind="..." on any element and read var(--hl). */

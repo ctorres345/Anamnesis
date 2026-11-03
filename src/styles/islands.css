@@ -15,7 +15,7 @@
 .ink-blot i.p { background: var(--peach); }
 .ink-blot i.e { transform: scale(0); }
 .ink-bottom { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
-.ink-btn { border: 1px solid var(--line); background: var(--sheet); border-radius: 99px; padding: 6px 13px; font-size: 14px; cursor: pointer; }
+.ink-btn { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--sheet); border-radius: 99px; padding: 6px 13px; font-size: 14px; cursor: pointer; }
 .ink-btn:hover { background: var(--lavender-soft); }
 .ink-fine { font: 400 11px var(--font-mono); color: var(--muted); }
 
@@ -43,7 +43,7 @@
   border: 1px solid var(--line); background: var(--sheet); border-radius: 99px; padding: 6px 13px;
   cursor: pointer; font-size: 14px; display: inline-flex; align-items: center; gap: 7px;
 }
-.jl-filters button i { width: 9px; height: 9px; border-radius: 2px; display: block; background: var(--hl); }
+.jl-filters button svg { color: var(--on-pastel); background: var(--hl); border-radius: 5px; padding: 3px; width: 20px; height: 20px; }
 .jl-filters button[aria-pressed='true'] { background: var(--ink); color: var(--sheet); border-color: var(--ink); }
 .jl-rows { border-top: 1px solid var(--line); }
 .jl-row {

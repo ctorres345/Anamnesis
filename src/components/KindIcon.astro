@@ -1,0 +1,18 @@
+---
+// One Lucide icon per kind of entry. Keep in sync with KIND_ICONS in src/islands/JournalList.tsx.
+import CodeXml from '@lucide/astro/icons/code-xml';
+import Brain from '@lucide/astro/icons/brain';
+import Gamepad2 from '@lucide/astro/icons/gamepad-2';
+import PenLine from '@lucide/astro/icons/pen-line';
+import Clapperboard from '@lucide/astro/icons/clapperboard';
+
+interface Props {
+  kind: string;
+  size?: number;
+}
+const { kind, size = 14 } = Astro.props;
+const ICONS = { project: CodeXml, psychology: Brain, game: Gamepad2, thought: PenLine, 'video-idea': Clapperboard } as const;
+const Icon = ICONS[kind as keyof typeof ICONS] ?? PenLine;
+---
+
+<Icon size={size} aria-hidden="true" />

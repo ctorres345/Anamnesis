@@ -1,6 +1,9 @@
 ---
 import { useT, type Lang } from '../lib/i18n';
 import { SOCIAL } from '../lib/site';
+import GithubMark from './GithubMark.astro';
+import Rss from '@lucide/astro/icons/rss';
+import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = useT(lang);
@@ -11,9 +14,9 @@ const year = new Date().getFullYear();
   <div class="top">
     <p class="cta">{t('footer.subscribe')}</p>
     <div class="links">
-      {SOCIAL.map((s) => <a href={s.href} rel="me">({s.label})</a>)}
-      <a href={`/${lang}/rss.xml`}>(RSS)</a>
-      <a href="https://yuyay.cjtech.dev">(Yuyay)</a>
+      {SOCIAL.map((s) => <a href={s.href} rel="me">{s.logo === 'github' && <GithubMark size={14} />}{s.label}</a>)}
+      <a href={`/${lang}/rss.xml`}><Rss size={14} aria-hidden="true" />RSS</a>
+      <a href="https://yuyay.cjtech.dev">Yuyay<ArrowUpRight size={13} aria-hidden="true" /></a>
     </div>
   </div>
   <p class="giant" aria-hidden="true">cesar <span class="hl">torres</span></p>
@@ -25,7 +28,7 @@ const year = new Date().getFullYear();
   .top { display: flex; flex-wrap: wrap; gap: 16px 40px; justify-content: space-between; align-items: baseline; }
   .cta { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
   .links { display: flex; flex-wrap: wrap; gap: 6px 18px; font: 400 13px var(--font-mono); color: var(--muted); }
-  .links a { text-decoration: none; }
+  .links a { text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
   .links a:hover { color: var(--ink); }
   .giant {
     font-weight: 700; font-size: var(--step-giant); letter-spacing: -0.06em; line-height: 0.82;

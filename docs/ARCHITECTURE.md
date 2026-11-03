@@ -85,7 +85,7 @@ Islands use Preact (~4 KB) with the same hooks API as React. Page-to-page naviga
 | Check | Command | Catches |
 |---|---|---|
 | Lint | `npm run lint` (oxlint) | code smells |
-| Unit tests | `npm test` (Vitest) | logic, e.g. the inkblot is always symmetric |
+| Unit tests | `npm test` (Vitest) | logic (inkblot symmetry, blob shapes) and color contrast of every token pair |
 | Types + content | `npm run build` (`astro check` + schema) | type errors, invalid posts |
 
 ## 9. Planned pieces (not built yet)
@@ -106,3 +106,5 @@ Islands use Preact (~4 KB) with the same hooks API as React. Page-to-page naviga
 | 2026-11-02 | Style "Mind Notebook" | Shows engineering, psychology, games, art and writing |
 | 2026-11-02 | Preact instead of React for islands | Same code, ~60 KB less JavaScript |
 | 2026-11-02 | Direct pushes to `main` allowed in this repo only | Personal site, single author |
+| 2026-11-03 | Lucide icons; blobs generated in code; CSS draw-on animations | Real icons instead of emoji. No Lottie (a player adds ~60 KB+ of JS) and no unDraw (generic flat style that doesn't match the pixel/notebook look) |
+| 2026-11-03 | Automated WCAG contrast test on design tokens | Caught grey text at 4.0:1 on the lavender band; fixed to 4.8:1 |
