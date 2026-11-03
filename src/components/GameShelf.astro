@@ -1,6 +1,7 @@
 ---
 import { useT, type Lang } from '../lib/i18n';
 import { entryUrl, type Entry } from '../lib/journal';
+import { Image } from 'astro:assets';
 import Star from '@lucide/astro/icons/star';
 import Clock from '@lucide/astro/icons/clock';
 
@@ -27,9 +28,13 @@ const ICONS = {
         <div class="cover">
           <span class="stat">{t(`status.${info.status}`)}</span>
           {g.data.sample && <span class="stat sample">{t('sample')}</span>}
-          <div class="px" aria-hidden="true">
-            {ICONS[info.status].join('').split('').map((c) => <i class={c === 'o' ? 'on' : undefined} />)}
-          </div>
+          {g.data.cover ? (
+            <Image class="art" src={g.data.cover} alt={g.data.coverAlt ?? ''} widths={[360, 600]} sizes="(max-width: 520px) 100vw, 360px" />
+          ) : (
+            <div class="px" aria-hidden="true">
+              {ICONS[info.status].join('').split('').map((c) => <i class={c === 'o' ? 'on' : undefined} />)}
+            </div>
+          )}
         </div>
         <h3>{g.data.title.split(',')[0]}</h3>
         <div class="meta">
@@ -54,7 +59,8 @@ const ICONS = {
   .px { display: grid; grid-template-columns: repeat(7, 12px); gap: 3px; }
   .px i { width: 12px; height: 12px; display: block; }
   .px i.on { background: var(--on-pastel); opacity: 0.85; }
-  .stat { position: absolute; top: 10px; left: 10px; font: 500 11px var(--font-mono); background: var(--sheet); color: var(--ink); padding: 3px 8px; border-radius: 6px; }
+  .cover :global(.art) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .stat { z-index: 1; position: absolute; top: 10px; left: 10px; font: 500 11px var(--font-mono); background: var(--sheet); color: var(--ink); padding: 3px 8px; border-radius: 6px; }
   .stat.sample { left: auto; right: 10px; color: var(--muted); }
   h3 { margin: 0; font-size: 19px; font-weight: 600; letter-spacing: -0.01em; }
   .ico { display: inline-flex; align-items: center; gap: 4px; }

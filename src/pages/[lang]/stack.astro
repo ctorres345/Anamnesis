@@ -50,6 +50,7 @@ const layers: Layer[] = [
     tools: [
       { name: 'Markdown + MDX', href: 'https://mdxjs.com', what: { es: 'Cada entrada es un archivo de texto con propiedades arriba.', en: 'Each entry is a text file with properties on top.' }, why: { es: 'Es portable y lo puedo escribir en cualquier editor.', en: 'Portable, and I can write it in any editor.' } },
       { name: 'Obsidian', href: 'https://obsidian.md', what: { es: 'Donde escribo, con plantillas y Obsidian Git.', en: 'Where I write, with templates and Obsidian Git.' }, why: { es: 'Ya tomo apuntes ahí; publicar es un push.', en: 'I already take notes there; publishing is one push.' } },
+      { name: 'Pagefind', href: 'https://pagefind.app', what: { es: 'Buscador del diario (Ctrl K).', en: 'Journal search (Ctrl K).' }, why: { es: 'El índice se arma al publicar; sin servidor.', en: 'The index is built when publishing; no server.' } },
       { name: 'Content Collections + Zod', href: 'https://docs.astro.build/en/guides/content-collections/', what: { es: 'Revisa que cada entrada tenga los campos correctos.', en: 'Checks that each entry has the right fields.' }, why: { es: 'Un error en una entrada detiene la publicación en vez de romper la página.', en: 'A mistake in an entry stops the publish instead of breaking the page.' } },
     ],
   },
@@ -67,6 +68,7 @@ const layers: Layer[] = [
       { name: 'CSS + design tokens', href: `${REPO}/blob/main/docs/DESIGN-SYSTEM.md`, what: { es: 'Colores, fuentes y espacios en un solo archivo, con modo claro y oscuro.', en: 'Colors, fonts and spacing in one file, with light and dark mode.' }, why: { es: 'Cambiar el estilo es cambiar un archivo.', en: 'Changing the look means changing one file.' } },
       { name: 'Fontsource', href: 'https://fontsource.org', what: { es: 'Hanken Grotesk, Geist Mono y Caveat, alojadas aquí mismo.', en: 'Hanken Grotesk, Geist Mono and Caveat, self-hosted.' }, why: { es: 'Sin pedir nada a otros servidores.', en: 'No requests to third-party servers.' } },
       { name: 'Lucide', href: 'https://lucide.dev', what: { es: 'Íconos de línea en botones, tipos de entrada y estrellas.', en: 'Line icons on buttons, entry types and stars.' }, why: { es: 'Íconos reales en vez de emojis; solo se envían los que se usan.', en: 'Real icons instead of emoji; only the ones used are shipped.' } },
+      { name: 'Satori', href: 'https://github.com/vercel/satori', what: { es: 'Dibuja la imagen para compartir de cada entrada.', en: 'Draws the share image for every entry.' }, why: { es: 'Cada enlace en WhatsApp o LinkedIn muestra su propia tarjeta.', en: 'Every link on WhatsApp or LinkedIn shows its own card.' } },
       { name: 'View Transitions', href: 'https://docs.astro.build/en/guides/view-transitions/', what: { es: 'Transiciones suaves entre páginas.', en: 'Smooth changes between pages.' }, why: { es: 'Se siente como una app sin serlo.', en: 'Feels like an app without being one.' } },
     ],
   },
@@ -83,13 +85,15 @@ const layers: Layer[] = [
     tools: [
       { name: 'Cloudflare Workers', href: 'https://developers.cloudflare.com/workers/static-assets/', what: { es: 'Sirve las páginas y construye el sitio en cada push.', en: 'Serves the pages and builds the site on every push.' }, why: { es: 'Plan gratis, rápido en Latinoamérica, igual que Yuyay.', en: 'Free plan, fast in Latin America, same as Yuyay.' } },
       { name: 'GitHub', href: REPO, what: { es: 'Guarda el código y el historial de cada entrada.', en: 'Stores the code and the history of every entry.' }, why: { es: 'Si algo sale mal, vuelvo a la versión anterior.', en: 'If something breaks, I go back to the previous version.' } },
+      { name: 'Workers KV', href: 'https://developers.cloudflare.com/kv/', what: { es: 'Guarda los conteos anónimos de la escala del 1 al 5.', en: 'Stores the anonymous counts of the 1–5 scale.' }, why: { es: 'Gratis y sin base de datos que mantener. Solo números, nada de visitantes.', en: 'Free, no database to look after. Only numbers, nothing about visitors.' } },
+      { name: 'giscus', href: 'https://giscus.app', what: { es: 'Comentarios guardados en GitHub Discussions.', en: 'Comments stored in GitHub Discussions.' }, why: { es: 'Sin base de datos ni anuncios; se modera desde GitHub.', en: 'No database or ads; moderated from GitHub.' } },
       { name: 'RSS + sitemap', href: `/${lang}/rss.xml`, what: { es: 'Feed por idioma y mapa del sitio.', en: 'One feed per language and a sitemap.' }, why: { es: 'Para lectores de RSS y buscadores.', en: 'For feed readers and search engines.' } },
     ],
   },
 ];
 
 const notHere: Text[] = [
-  { es: 'Base de datos ni cuentas de usuario', en: 'A database or user accounts' },
+  { es: 'Cuentas de usuario ni datos de visitantes', en: 'User accounts or visitor data' },
   { es: 'Cookies, anuncios o rastreo de visitantes', en: 'Cookies, ads or visitor tracking' },
   { es: 'Servicios de pago', en: 'Paid services' },
 ];

@@ -11,6 +11,8 @@
 | `tags` | no | `[metroidvania, indie]` | Labels |
 | `draft` | no | `true` / `false` | `true` = hidden on the site |
 | `sample` | no | `true` | Shows a "sample" badge |
+| `cover` | no | `./assets/boss.png` | Big image on the post and its card |
+| `coverAlt` | no | `The first boss` | Description of the cover |
 
 ## Only for `kind: game` (required)
 ```yaml

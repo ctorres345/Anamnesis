@@ -77,3 +77,22 @@
 .likert-scale input:checked + .likert-dot { background: var(--lavender-deep); border-color: var(--lavender-deep); }
 .likert-scale input:focus-visible + .likert-dot { outline: 2px solid var(--lavender-deep); outline-offset: 3px; }
 .likert-out { font: 400 12px var(--font-mono); color: var(--muted); margin: 12px 0 0; min-height: 1.4em; }
+.likert fieldset:disabled label { cursor: default; }
+.likert-bar { display: flex; align-items: flex-end; width: 10px; height: 28px; background: var(--lavender-soft); border-radius: 3px; overflow: hidden; }
+.likert-bar span { display: block; width: 100%; background: var(--lavender-deep); border-radius: 3px; transition: height 0.4s var(--ease-pop); }
+
+/* ---------- Search ---------- */
+.search-btn { border: 1px solid var(--line); background: var(--sheet); width: 34px; height: 32px; border-radius: 99px; display: grid; place-items: center; cursor: pointer; color: var(--muted); }
+.search-btn:hover { color: var(--ink); background: var(--lavender-soft); }
+.search-dialog { border: 0; padding: 0; background: transparent; width: min(620px, calc(100vw - 32px)); margin: 12vh auto auto; color: var(--ink); }
+.search-dialog::backdrop { background: rgba(20, 24, 20, 0.45); backdrop-filter: blur(2px); }
+.search-box { background: var(--sheet); border: 1px solid var(--line); border-radius: var(--radius-l); padding: 14px; box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.45); }
+.search-row { display: flex; align-items: center; gap: 10px; padding: 4px 6px 10px; border-bottom: 1px solid var(--line); color: var(--muted); }
+.search-row input { flex: 1; min-width: 0; border: 0; background: none; font: 500 18px var(--font-display); color: var(--ink); outline: none; }
+.search-close { border: 0; background: none; cursor: pointer; color: var(--muted); display: grid; place-items: center; }
+.search-note { margin: 12px 6px 4px; color: var(--muted); font-size: 14px; }
+.search-results { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 4px; max-height: 55vh; overflow: auto; }
+.search-results a { display: grid; gap: 3px; padding: 10px; border-radius: var(--radius-m); text-decoration: none; }
+.search-results a:hover, .search-results a:focus-visible { background: var(--lavender-soft); }
+.search-results span { font-size: 14px; color: var(--muted); }
+.search-results mark { background: var(--matcha); color: var(--on-pastel); border-radius: 2px; padding-inline: 1px; }

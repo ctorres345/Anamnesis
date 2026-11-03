@@ -33,7 +33,7 @@ If a property is wrong (for example `rating: 7`), `npm run build` stops and says
 1. Clone the repo on your computer.
 2. In Obsidian: **Open folder as vault** → choose `src/content/journal`.
 3. Settings → **Templates** (core plugin): template folder = `_templates`.
-4. Settings → **Files and links**: turn off "Use [[Wikilinks]]" for now (wikilink support comes later), set "New link format" to "Relative path to file", and set "Default location for new attachments" to "In subfolder under current folder", name `assets`.
+4. Settings → **Files and links**: "Use [[Wikilinks]]" on, "New link format" = "Shortest path when possible", "Default location for new attachments" = "In subfolder under current folder", name `assets`. `[[post]]` links and `![[image.png]]` embeds work; a link to a missing post fails the build.
 5. Install the community plugin **Obsidian Git**. Use "Commit and push" when a post is ready, and "Pull" before you start writing so you get changes made with Claude Code.
 
 New post in Obsidian: create a note inside `es/` or `en/` → command "Insert template" → pick the kind → fill the properties.

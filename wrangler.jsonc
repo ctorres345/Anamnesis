@@ -1,12 +1,17 @@
 {
-  // Static site on Cloudflare Workers (static assets). No server code yet.
+  // Static site on Cloudflare Workers (static assets) + a tiny Worker for /api/* (anonymous 1–5 counts).
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "anamnesis",
+  "main": "worker/index.ts",
   "compatibility_date": "2026-10-19",
   "assets": {
     "directory": "./dist",
-    "not_found_handling": "404-page"
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    // Only /api/* reaches the Worker; every other request is a plain static file.
+    "run_worker_first": ["/api/*"]
   },
+  "kv_namespaces": [{ "binding": "REACTIONS", "id": "05cc7ea64d314b1c947cbc0bf2853ed4" }],
   "routes": [{ "pattern": "cjtech.dev", "custom_domain": true }],
   "workers_dev": true
 }

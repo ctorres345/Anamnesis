@@ -9,12 +9,12 @@ Do this once per computer.
 ## B. Settings → Files and links
 | Setting | Value |
 |---|---|
-| Use [[Wikilinks]] | **Off** |
-| New link format | **Relative path to file** |
+| Use [[Wikilinks]] | **On** |
+| New link format | **Shortest path when possible** |
 | Default location for new attachments | **In subfolder under current folder** |
 | Subfolder name | `assets` |
 
-Why: the site reads normal Markdown links. With these settings, pasting an image creates `![](assets/image.png)`, which the site understands.
+Why: the site understands Obsidian links. Pasting an image creates `![[image.png]]` and saves it in `assets/` next to the post, which is where the site looks.
 
 ## C. Settings → Core plugins → Templates
 | Setting | Value |

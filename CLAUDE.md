@@ -6,7 +6,9 @@ Docs: `docs/ARCHITECTURE.md` (architecture and system design), `docs/DESIGN-SYST
 
 ## Commands
 - `npm run dev`: local site at http://localhost:4321
-- `npm run build`: `astro check` (types) + static build into `dist/`
+- `npm run build`: lint + tests + `astro check` + static build + Pagefind search index. Cloudflare runs this on every push, so a failing test blocks the publish.
+- `npm run build:fast`: build + search index only (local previews).
+- `npx wrangler dev`: run the built site with the Worker and a local KV (needed to try the 1–5 scale).
 - `npm test`: Vitest. `npm run lint`: oxlint.
 - `npm run deploy`: build + `wrangler deploy` (Cloudflare Workers static assets, custom domain `cjtech.dev`).
 - Run `npm run lint && npm test && npm run build` before saying a change is done.
@@ -17,11 +19,15 @@ Docs: `docs/ARCHITECTURE.md` (architecture and system design), `docs/DESIGN-SYST
 - UI text: `src/lib/i18n.ts` (es and en). Post text never goes there.
 - Design tokens: `src/styles/tokens.css`. Use tokens, never literal colors. Every color needs a dark value.
 - The Stack page (`src/pages/[lang]/stack.astro`) lists the tech stack; update it when a tool changes.
+- `worker/`: the only server code. Serves `/api/reactions` (anonymous 1–5 counts in Workers KV `REACTIONS`); every other path is a static file (`run_worker_first: ["/api/*"]`).
+- Obsidian `[[links]]` and `![[image]]` embeds: `src/lib/remark-wikilinks.mjs`. A link to a missing post fails the build.
+- About page: `src/content/journal/pages/{es,en}/about.md` (collection `pages`, inside the vault).
+- Comments: giscus, configured in `GISCUS` in `src/lib/site.ts`; hidden while `categoryId` is empty.
 - Mind map topics and links: `src/lib/mindmap.ts`. Profile links (GitHub, LinkedIn): `src/lib/site.ts`.
 
 ## Rules
 - Cost zero: static hosting on Cloudflare free tier. No paid services.
-- No tracking that identifies people. No cookies. `localStorage` only for the theme choice.
+- No tracking that identifies people. No cookies. `localStorage` only for the theme choice and which posts this browser already answered on the 1–5 scale. The Worker stores only counts per post: no IP, no ID.
 - The inkblot and the Likert scale are decoration and feedback only. Never present anything as a psychological test or interpret visitors.
 - `sample: true` marks placeholder posts; remove them as real posts arrive.
 - Code, comments and commits in English. Interface text in both languages.

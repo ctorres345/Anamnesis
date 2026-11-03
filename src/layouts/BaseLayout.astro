@@ -14,9 +14,13 @@ interface Props {
   description?: string;
   /** Path of this page in the other language. Set it only when that page exists. */
   altPath?: string;
+  /** Social preview image path. Defaults to the site image. */
+  ogImage?: string;
+  /** "article" for posts. */
+  ogType?: 'website' | 'article';
 }
 
-const { lang, title, description, altPath } = Astro.props;
+const { lang, title, description, altPath, ogImage: ogPath = '/og.png', ogType = 'website' } = Astro.props;
 const t = useT(lang);
 const alt = otherLang(lang);
 const fullTitle = title === 'cjtech.dev' ? title : `${title} · cjtech.dev`;
@@ -24,7 +28,7 @@ const desc = description ?? t('journal.intro');
 const site = Astro.site ?? new URL('https://cjtech.dev');
 const canonical = new URL(Astro.url.pathname, site).href;
 const altUrl = altPath ? new URL(altPath, site).href : undefined;
-const ogImage = new URL('/og.png', site).href;
+const ogImage = new URL(ogPath, site).href;
 ---
 
 <!doctype html>
@@ -46,7 +50,7 @@ const ogImage = new URL('/og.png', site).href;
     <meta name="theme-color" content="#121511" media="(prefers-color-scheme: dark)" />
 
     <!-- Social previews (WhatsApp, LinkedIn, X...) -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content="cjtech.dev" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={desc} />

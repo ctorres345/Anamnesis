@@ -24,7 +24,10 @@ const journal = defineCollection({
         draft: z.boolean().default(false),
         /** Placeholder content: shows a "sample" badge. */
         sample: z.boolean().default(false),
+        /** Image at the top of the post and on game cards: ./assets/file.png */
         cover: image().optional(),
+        /** Short description of the cover for screen readers. */
+        coverAlt: z.string().optional(),
         game: z
           .object({
             platform: z.string(),
@@ -57,4 +60,14 @@ const journal = defineCollection({
       }),
 });
 
-export const collections = { journal };
+/** Fixed pages written in Markdown (About). Lives inside the Obsidian vault: journal/pages/{es,en}/. */
+const pages = defineCollection({
+  loader: glob({ pattern: '{es,en}/*.{md,mdx}', base: './src/content/journal/pages' }),
+  schema: z.object({
+    title: z.string(),
+    summary: z.string().optional(),
+    note: z.string().max(40).optional(),
+  }),
+});
+
+export const collections = { journal, pages };

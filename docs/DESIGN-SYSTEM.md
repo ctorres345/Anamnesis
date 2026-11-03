@@ -126,7 +126,11 @@ On the home page, the hand-drawn circle draws itself and the highlighter sweeps 
 | Pixel inkblot card | `src/islands/Inkblot.tsx`, `src/lib/inkblot.ts` | 18×14 cells, mirrored; "just for fun, not a test" |
 | Mind map | `src/islands/MindMap.tsx`, `src/lib/mindmap.ts` | Topics and links are data |
 | Field-notes list | `src/islands/JournalList.tsx` | Filters only on the journal page |
-| Likert scale | `src/islands/Likert.tsx` | 5 points, "not at all" → "a lot" |
+| Likert scale | `src/islands/Likert.tsx` | 5 points, "not at all" → "a lot"; after answering, small lavender bars show how others answered |
+| Search | `src/islands/Search.tsx` | `Ctrl K` or `/`; matches highlighted in matcha |
+| Contents list, progress bar, related posts, tags | `src/pages/[lang]/journal/[...slug].astro` | Progress bar is pure CSS (scroll timeline) |
+| Ideas board | `src/pages/[lang]/ideas.astro` | Butter sticky notes in 4 columns by stage |
+| Social image | `src/lib/og.ts` | 1200×630 PNG per post, uses the light tokens |
 | Game shelf | `src/components/GameShelf.astro` | Cover color = status |
 | Kind chip, sample badge | `.chip-kind`, `.badge-sample` in `global.css` | |
 | Buttons | `.btn`, `.btn.dark` in `global.css` | Pill shape |

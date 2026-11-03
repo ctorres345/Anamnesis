@@ -52,3 +52,42 @@ export function toRows(entries: Entry[], lang: Lang): Row[] {
     sample: e.data.sample,
   }));
 }
+
+/** Tag -> URL-safe slug ("Cognitive psych" -> "cognitive-psych"). */
+export function tagSlug(tag: string): string {
+  return tag
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+/** Every tag used in these entries, with how many posts use it, most used first. */
+export function tagCounts(entries: Entry[]): { tag: string; slug: string; count: number }[] {
+  const map = new Map<string, { tag: string; slug: string; count: number }>();
+  for (const e of entries) {
+    for (const tag of e.data.tags) {
+      const slug = tagSlug(tag);
+      const item = map.get(slug) ?? { tag, slug, count: 0 };
+      item.count += 1;
+      map.set(slug, item);
+    }
+  }
+  return [...map.values()].sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
+}
+
+/** Up to `n` other posts: shared tags count most, then same kind, then newest. */
+export function relatedEntries(entry: Entry, pool: Entry[], n = 3): Entry[] {
+  const tags = new Set(entry.data.tags.map(tagSlug));
+  return pool
+    .filter((e) => e.id !== entry.id)
+    .map((e) => ({
+      e,
+      score: e.data.tags.filter((t) => tags.has(tagSlug(t))).length * 2 + (e.data.kind === entry.data.kind ? 1 : 0),
+    }))
+    .filter((x) => x.score > 0)
+    .sort((a, b) => b.score - a.score || b.e.data.date.getTime() - a.e.data.date.getTime())
+    .slice(0, n)
+    .map((x) => x.e);
+}

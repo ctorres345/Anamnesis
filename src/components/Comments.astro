@@ -1,0 +1,39 @@
+---
+// giscus comments (GitHub Discussions). Hidden until GISCUS.categoryId is set in src/lib/site.ts.
+import { GISCUS } from '../lib/site';
+import { useT, type Lang } from '../lib/i18n';
+interface Props { lang: Lang; term: string }
+const { lang, term } = Astro.props;
+const t = useT(lang);
+const enabled = GISCUS.categoryId !== '';
+---
+
+{enabled && (
+  <section class="comments" aria-label={t('entry.comments')}>
+    <h2>{t('entry.comments')}</h2>
+    <script
+      is:inline
+      src="https://giscus.app/client.js"
+      data-repo={GISCUS.repo}
+      data-repo-id={GISCUS.repoId}
+      data-category={GISCUS.category}
+      data-category-id={GISCUS.categoryId}
+      data-mapping="specific"
+      data-term={term}
+      data-strict="1"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang={lang}
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async
+    ></script>
+  </section>
+)}
+
+<style>
+  .comments { margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--line); max-width: 760px; }
+  h2 { margin: 0 0 16px; font-size: var(--step-2); font-weight: 600; letter-spacing: -0.02em; }
+</style>

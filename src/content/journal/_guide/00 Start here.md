@@ -7,6 +7,7 @@ This folder is a guide for maintaining cjtech.dev from Obsidian. **Nothing in `_
 journal/            ← this vault
 ├── _guide/         ← this guide (private)
 ├── _templates/     ← one template per kind of post (private)
+├── pages/          ← About page (es/about.md, en/about.md)
 ├── es/             ← Spanish posts → cjtech.dev/es/journal/...
 │   └── assets/     ← images for Spanish posts
 └── en/             ← English posts → cjtech.dev/en/journal/...
@@ -31,3 +32,4 @@ journal/            ← this vault
 | Fix it when something fails | [06 When something fails](06%20When%20something%20fails.md) |
 | Change things outside posts | [07 Maintaining the site](07%20Maintaining%20the%20site.md) |
 | See every property | [08 Properties cheat sheet](08%20Properties%20cheat%20sheet.md) |
+| Edit About, use tags, see answers and comments | [09 About, tags, answers, comments](09%20About%2C%20tags%2C%20answers%2C%20comments.md) |

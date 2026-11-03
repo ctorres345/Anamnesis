@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Hash from '@lucide/astro/icons/hash';
+import { LANGS, otherLang, useT, type Lang } from '../../../lib/i18n';
+import { getEntries, tagCounts } from '../../../lib/journal';
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+const t = useT(lang);
+const tags = tagCounts(await getEntries(lang));
+---
+
+<BaseLayout lang={lang} title={t('tags.title')} description={t('tags.intro')} altPath={`/${otherLang(lang)}/tags/`}>
+  <section class="block pad">
+    <div class="sec-head">
+      <h1>{t('tags.title')}</h1>
+      <p>{t('tags.intro')}</p>
+    </div>
+    <ul class="cloud">
+      {tags.map((tag) => (
+        <li><a href={`/${lang}/tags/${tag.slug}/`}><Hash size={14} aria-hidden="true" />{tag.tag}<span class="mono">{tag.count}</span></a></li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .cloud { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .cloud a { display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--line); border-radius: 99px; padding: 7px 14px; text-decoration: none; font-weight: 500; }
+  .cloud a:hover { background: var(--lavender-soft); }
+  .cloud span { font-size: 12px; color: var(--muted); margin-left: 4px; }
+</style>

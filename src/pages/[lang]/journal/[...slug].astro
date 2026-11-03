@@ -1,15 +1,28 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Likert from '../../../islands/Likert';
 import KindIcon from '../../../components/KindIcon.astro';
+import Comments from '../../../components/Comments.astro';
 import ArrowLeft from '@lucide/astro/icons/arrow-left';
 import ArrowRight from '@lucide/astro/icons/arrow-right';
 import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
 import Calendar from '@lucide/astro/icons/calendar';
 import Clock from '@lucide/astro/icons/clock';
-import { formatDate, otherLang, useT } from '../../../lib/i18n';
-import { entryUrl, findTranslation, readingMinutes, splitId, type Entry } from '../../../lib/journal';
+import Hash from '@lucide/astro/icons/hash';
+import ListTree from '@lucide/astro/icons/list-tree';
+import { formatDate, isoDay, otherLang, useT } from '../../../lib/i18n';
+import {
+  entryUrl,
+  findTranslation,
+  getEntries,
+  readingMinutes,
+  relatedEntries,
+  splitId,
+  tagSlug,
+  type Entry,
+} from '../../../lib/journal';
 
 export async function getStaticPaths() {
   const entries = await getCollection('journal', (e) => import.meta.env.DEV || !e.data.draft);
@@ -20,11 +33,13 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props as { entry: Entry };
-const { lang } = splitId(entry.id);
+const { lang, slug } = splitId(entry.id);
 const t = useT(lang);
 const alt = otherLang(lang);
 const translation = await findTranslation(entry, alt);
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const related = relatedEntries(entry, await getEntries(lang));
 const d = entry.data;
 ---
 
@@ -33,25 +48,46 @@ const d = entry.data;
   title={d.title}
   description={d.summary}
   altPath={translation ? entryUrl(translation) : undefined}
+  ogImage={d.draft ? undefined : `/og/${lang}/${slug}.png`}
+  ogType="article"
 >
+  <div class="progress" aria-hidden="true"></div>
   <article class="block pad" data-kind={d.kind}>
     <div class="entry">
-      <div class="body">
-        <div class="meta">
-          <span class="ico"><Calendar size={13} aria-hidden="true" />{formatDate(d.date, lang)}</span>
+      <div class="body" data-pagefind-body>
+        <div class="meta" data-pagefind-ignore>
+          <span class="ico"><Calendar size={13} aria-hidden="true" /><time datetime={isoDay(d.date)}>{formatDate(d.date, lang)}</time></span>
           <span class="chip-kind"><KindIcon kind={d.kind} size={12} />{t(`kind.${d.kind}`)}</span>
           <span class="ico"><Clock size={13} aria-hidden="true" />{readingMinutes(entry.body)} {t('entry.read')}</span>
           {d.sample && <span class="badge-sample">{t('sample')}</span>}
           {d.draft && <span class="badge-sample">draft</span>}
         </div>
-        <h1>{d.title}</h1>
+        <h1 data-pagefind-meta="title">{d.title}</h1>
         {d.summary && <p class="lede">{d.summary}</p>}
+        {d.cover && (
+          <Image class="cover" src={d.cover} alt={d.coverAlt ?? ''} widths={[480, 800, 1200]} sizes="(max-width: 860px) 100vw, 760px" loading="eager" />
+        )}
         <div class="prose">
           <Content />
         </div>
+        {d.tags.length > 0 && (
+          <ul class="tags" data-pagefind-ignore>
+            {d.tags.map((tag) => (
+              <li><a href={`/${lang}/tags/${tagSlug(tag)}/`}><Hash size={12} aria-hidden="true" />{tag}</a></li>
+            ))}
+          </ul>
+        )}
       </div>
-      <aside class="margin">
+      <aside class="margin" data-pagefind-ignore>
         {d.note && <span class="hand note">↳ {d.note}</span>}
+        {toc.length >= 2 && (
+          <nav class="toc" aria-label={t('entry.toc')}>
+            <p><ListTree size={14} aria-hidden="true" />{t('entry.toc')}</p>
+            <ol>
+              {toc.map((h) => <li class={`d${h.depth}`}><a href={`#${h.slug}`}>{h.text}</a></li>)}
+            </ol>
+          </nav>
+        )}
         {d.game && (
           <dl class="facts">
             <dt>{t('nav.games')}</dt><dd>{d.game.platform}</dd>
@@ -61,43 +97,98 @@ const d = entry.data;
           </dl>
         )}
         {d.project?.url && <a class="btn" href={d.project.url}>{d.project.url.replace(/^https?:\/\//, '')} <ArrowUpRight size={15} aria-hidden="true" /></a>}
-        <Likert
-          client:visible
-          question={t('likert.q')}
-          options={[t('likert.1'), t('likert.2'), t('likert.3'), t('likert.4'), t('likert.5')]}
-          thanks={t('likert.thanks')}
-          hint={t('likert.hint')}
-        />
+        {!d.draft && (
+          <Likert
+            client:visible
+            post={entry.id}
+            question={t('likert.q')}
+            options={[t('likert.1'), t('likert.2'), t('likert.3'), t('likert.4'), t('likert.5')]}
+            thanks={t('likert.thanks')}
+            hint={t('likert.hint')}
+            countLabel={t('likert.count')}
+            countOneLabel={t('likert.countOne')}
+            error={t('likert.error')}
+          />
+        )}
         <p class="lang-note">
           {translation ? <a href={entryUrl(translation)} hreflang={alt}>{t('entry.otherLang')} <ArrowRight size={13} aria-hidden="true" /></a> : t('entry.onlyThisLang')}
         </p>
       </aside>
     </div>
+
+    {related.length > 0 && (
+      <section class="related" data-pagefind-ignore>
+        <h2>{t('entry.related')}</h2>
+        <div class="cards">
+          {related.map((r) => (
+            <a class="card" href={entryUrl(r)} data-kind={r.data.kind}>
+              <span class="chip-kind"><KindIcon kind={r.data.kind} size={12} />{t(`kind.${r.data.kind}`)}</span>
+              <b>{r.data.title}</b>
+              {r.data.summary && <span>{r.data.summary}</span>}
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {!d.draft && <Comments lang={lang} term={entry.data.translationKey} />}
+
     <p class="back"><a class="btn" href={`/${lang}/journal/`}><ArrowLeft size={16} aria-hidden="true" />{t('entry.back')}</a></p>
   </article>
 </BaseLayout>
 
 <style>
+  /* Reading progress: pure CSS, driven by page scroll. Browsers without support just don't show it. */
+  .progress { display: none; }
+  @supports (animation-timeline: scroll()) {
+    .progress {
+      display: block; position: fixed; inset: 0 0 auto; top: env(safe-area-inset-top, 0px); height: 3px; z-index: 30;
+      background: linear-gradient(90deg, var(--matcha), var(--lavender-deep)); transform-origin: 0 50%;
+      animation: grow linear both; animation-timeline: scroll(root);
+    }
+    @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  }
+  @media (prefers-reduced-motion: reduce) { .progress { display: none; } }
+
   .entry { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 300px); gap: clamp(24px, 4vw, 56px); }
   .meta { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font: 400 12px var(--font-mono); color: var(--muted); }
   h1 { font-weight: 600; font-size: var(--step-3); letter-spacing: -0.03em; line-height: 1.08; margin: 12px 0 14px; }
   .lede { font-size: var(--step-1); color: var(--muted); margin: 0 0 18px; max-width: 60ch; }
+  .cover { width: 100%; height: auto; max-width: 760px; border-radius: var(--radius-l); margin: 4px 0 22px; display: block; }
   .prose { font-size: 17px; line-height: 1.7; max-width: 66ch; }
-  .prose :global(h2) { font-size: var(--step-2); letter-spacing: -0.02em; margin: 1.6em 0 0.4em; }
+  .prose :global(h2) { font-size: var(--step-2); letter-spacing: -0.02em; margin: 1.6em 0 0.4em; scroll-margin-top: 24px; }
+  .prose :global(h3) { scroll-margin-top: 24px; }
   .prose :global(a) { color: var(--lavender-deep); text-decoration-thickness: 1px; text-underline-offset: 3px; }
   .prose :global(blockquote) { margin: 18px 0; padding: 10px 16px; border-radius: 12px; background: var(--lavender-soft); }
   .prose :global(code) { font-family: var(--font-mono); font-size: 0.9em; background: var(--lavender-soft); padding: 1px 5px; border-radius: 4px; }
   .prose :global(img) { border-radius: var(--radius-m); }
   .prose :global(iframe) { width: 100%; aspect-ratio: 16 / 9; height: auto; border: 0; border-radius: var(--radius-m); }
   .prose :global(figcaption) { font: 400 13px var(--font-mono); color: var(--muted); margin-top: 6px; }
+  .tags { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 28px 0 0; padding: 0; }
+  .tags a { display: inline-flex; align-items: center; gap: 3px; font: 500 12px var(--font-mono); border: 1px solid var(--line); border-radius: 99px; padding: 4px 10px; text-decoration: none; color: var(--muted); }
+  .tags a:hover { background: var(--lavender-soft); color: var(--ink); }
   .ico { display: inline-flex; align-items: center; gap: 5px; }
   .lang-note a { display: inline-flex; align-items: center; gap: 4px; }
   .margin { display: grid; gap: 16px; align-content: start; }
   .note { transform: rotate(-1.5deg); }
+  .toc { border-left: 2px solid var(--lavender); padding-left: 14px; }
+  .toc p { margin: 0 0 6px; display: flex; align-items: center; gap: 6px; font: 500 12px var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 14px; }
+  .toc .d3 { padding-left: 12px; }
+  .toc a { text-decoration: none; color: var(--muted); }
+  .toc a:hover { color: var(--lavender-deep); }
   .facts { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; font: 400 13px var(--font-mono); background: var(--hl); color: var(--on-pastel); padding: 12px 14px; border-radius: var(--radius-m); }
   .facts dd { margin: 0; }
   .lang-note { margin: 0; font: 400 13px var(--font-mono); color: var(--muted); }
   .lang-note a { color: var(--lavender-deep); }
+  .related { margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--line); }
+  .related h2 { margin: 0 0 16px; font-size: var(--step-2); font-weight: 600; letter-spacing: -0.02em; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+  .card { display: grid; gap: 8px; align-content: start; border: 1px solid var(--line); border-radius: var(--radius-m); padding: 14px 16px; text-decoration: none; transition: background var(--dur), transform var(--dur); }
+  .card:hover { background: var(--hl); color: var(--on-pastel); transform: translateY(-3px); }
+  .card b { font-size: 17px; line-height: 1.25; }
+  .card > span:last-child { font-size: 14px; color: var(--muted); }
+  .card:hover > span:last-child { color: var(--on-pastel); }
   .back { margin: 40px 0 0; }
   @media (max-width: 860px) { .entry { grid-template-columns: minmax(0, 1fr); } }
 </style>

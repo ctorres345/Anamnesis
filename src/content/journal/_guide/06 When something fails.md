@@ -19,6 +19,8 @@ The site checks every post before publishing. If something is wrong, **the old v
 | `translationKey ... Required` | Missing translationKey | Add one, like `my-post` |
 | `ImageNotFound ... assets/x.png` | Image file missing or renamed | Paste the image again, or fix the path |
 | `must live in es/ or en/` | Post outside those folders | Move the note into `es/` or `en/` |
+| `Broken link [[x]] in post.md` | A `[[link]]` to a post that doesn't exist | Fix the name, or create that post |
+| `Tests ... failed` / `lint` | A code change broke something | Ask Claude Code with the error |
 
 Then: fix → commit → push.
 

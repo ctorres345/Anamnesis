@@ -2,6 +2,7 @@
 import { otherLang, useT, type Lang } from '../lib/i18n';
 import ThemeToggle from './ThemeToggle.astro';
 import Languages from '@lucide/astro/icons/languages';
+import Search from '../islands/Search';
 
 interface Props {
   lang: Lang;
@@ -13,7 +14,10 @@ const alt = otherLang(lang);
 const path = Astro.url.pathname;
 const links = [
   { href: `/${lang}/journal/`, label: t('nav.journal') },
+  { href: `/${lang}/projects/`, label: t('nav.projects') },
   { href: `/${lang}/games/`, label: t('nav.games') },
+  { href: `/${lang}/ideas/`, label: t('nav.ideas') },
+  { href: `/${lang}/about/`, label: t('nav.about') },
   { href: `/${lang}/stack/`, label: t('nav.stack') },
 ];
 ---
@@ -28,14 +32,20 @@ const links = [
   <a class="lang" href={altPath ?? `/${alt}/`} hreflang={alt} lang={alt}>
     <Languages size={13} aria-hidden="true" /><b>{lang.toUpperCase()}</b> / {alt.toUpperCase()}
   </a>
-  <ThemeToggle lang={lang} />
+  <div class="tools">
+    <Search
+      client:idle
+      labels={{ open: t('search.open'), placeholder: t('search.placeholder'), empty: t('search.empty'), devOnly: t('search.devOnly'), close: t('search.close') }}
+    />
+    <ThemeToggle lang={lang} />
+  </div>
 </header>
 
 <style>
   .site { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding-block: 26px; }
   .brand { font-weight: 700; font-size: 19px; text-decoration: none; margin-right: auto; }
   .brand span { color: var(--muted); font-weight: 500; }
-  nav { display: flex; flex-wrap: wrap; gap: 4px 22px; font-size: 15px; }
+  nav { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 15px; }
   nav a { text-decoration: none; color: var(--muted); }
   nav a:hover, nav a[aria-current='page'] { color: var(--ink); }
   nav a[aria-current='page'] { text-decoration: underline wavy var(--lavender); text-underline-offset: 6px; }
@@ -45,6 +55,7 @@ const links = [
     display: inline-flex; align-items: center; gap: 5px;
   }
   .lang b { color: var(--ink); }
+  .tools { display: flex; align-items: center; gap: 8px; }
   .lang:hover { background: var(--lavender-soft); }
   @media (max-width: 520px) { nav { order: 3; width: 100%; } }
 </style>

@@ -3,9 +3,9 @@
 ## Images
 1. Copy an image, then **paste it into the note** (`Cmd + V`), or drag the file in.
 2. Obsidian saves it in `assets/` next to the post and writes:
-   `![](assets/Pasted%20image%2020261102.png)`
-3. **Add a description** inside the brackets (for screen readers and search):
-   `![The first boss fight](assets/Pasted%20image%2020261102.png)`
+   `![[Pasted image 20261102.png]]`
+3. **Add a description** after a `|` (for screen readers and search):
+   `![[Pasted image 20261102.png|The first boss fight]]`
 
 What the site does for you:
 - Converts the image to a smaller format (WebP) and loads it only when it scrolls into view.
@@ -37,5 +37,20 @@ Paste this where the video should go and replace `VIDEO_ID` (the part after `v=`
 - Don't put videos (MP4) or big files in the vault: they make the repo heavy. Upload videos to YouTube and embed them.
 - GIFs work like images.
 
-## Wikilink embeds
-`![[image.png]]` does **not** work yet. Keep Wikilinks off (see [01 One-time setup](01%20One-time%20setup.md)).
+## Cover image
+A big image at the top of the post (and on game and project cards):
+```yaml
+cover: ./assets/boss-fight.png
+coverAlt: The first boss fight
+```
+Put the image in the post's `assets/` folder first. Use a normal path here (not `[[ ]]`).
+
+## Links to other posts
+| Write | Goes to |
+|---|---|
+| `[[hollow-knight]]` | that post, same language |
+| `[[hollow-knight\|my review]]` | same, with your own text |
+| `[[hollow-knight#Ending]]` | a section of that post |
+| `[[es/hollow-knight]]` | the Spanish version |
+
+A link to a post that doesn't exist **stops the publish** and names the file, so no broken links go live.

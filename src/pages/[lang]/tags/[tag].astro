@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import JournalList from '../../../islands/JournalList';
+import { LANGS, otherLang, useT, type Lang } from '../../../lib/i18n';
+import { getEntries, tagCounts, tagSlug, toRows } from '../../../lib/journal';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const lang of LANGS) {
+    const entries = await getEntries(lang);
+    for (const tag of tagCounts(entries)) {
+      const tagged = entries.filter((e) => e.data.tags.some((x) => tagSlug(x) === tag.slug));
+      paths.push({ params: { lang, tag: tag.slug }, props: { label: tag.tag, rows: toRows(tagged, lang) } });
+    }
+  }
+  return paths;
+}
+
+const lang = Astro.params.lang as Lang;
+const { label, rows } = Astro.props;
+const t = useT(lang);
+---
+
+<BaseLayout lang={lang} title={`#${label}`} altPath={`/${otherLang(lang)}/tags/`}>
+  <section class="block pad">
+    <div class="sec-head">
+      <h1><span class="soft">#</span>{label}</h1>
+      <p>{rows.length} {t('tags.posts')} · <a href={`/${lang}/tags/`}>{t('tags.title')}</a></p>
+    </div>
+    <JournalList rows={rows} sampleLabel={t('sample')} />
+  </section>
+</BaseLayout>
