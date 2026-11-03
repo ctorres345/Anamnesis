@@ -28,5 +28,6 @@ Posts are done in Obsidian. Everything else is code: do it with Claude Code on t
 |---|---|
 | Code and posts | GitHub: `ctorres345/Anamnesis` |
 | Hosting and build logs | Cloudflare dashboard → Workers & Pages → anamnesis |
+| Which branch publishes | `main` only (Settings → Build → Branch control). If pushes stop showing up on the site, check this first |
 | Domain | Cloudflare → cjtech.dev |
 | Docs for developers | `docs/` folder in the repo |

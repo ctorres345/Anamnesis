@@ -80,6 +80,7 @@ Islands use Preact (~4 KB) with the same hooks API as React. Page-to-page naviga
 - Each page outputs `hreflang` alternates and a canonical URL.
 
 ## 7. Hosting, caching and security
+- **Workers Builds** (Cloudflare dashboard → anamnesis → Settings → Build): production branch **`main`**, build command `npm run build`, deploy command `npx wrangler deploy`, builds for other branches off. Only pushes to `main` publish.
 - **Cloudflare Workers static assets**, config in `wrangler.jsonc`, custom domain `cjtech.dev`, `404.html` for missing pages.
 - **Worker** (`worker/index.ts`) runs only for `/api/*`. `GET /api/reactions?post=en/slug` returns `{ counts: [n1..n5] }`; `POST` with `{ post, answer }` adds one. It accepts same-origin POSTs only, checks the post really exists, and stores five numbers per post in Workers KV (`REACTIONS`). No IP, no cookie, no visitor ID. The browser remembers locally that it already answered.
 - **Comments**: giscus loads from giscus.app on entry pages (only when configured).
